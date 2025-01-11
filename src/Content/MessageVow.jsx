@@ -4,6 +4,7 @@ import LoveAnimations from "../assets/IconSvg";
 import { createMessage,  getCurrentDateTime, getCurrentLocation, getNote, isUserExists ,fetchAccurateLocation} from "../utility/Crudutil";
 import useQueryParam from "./../utility/useQueryParam";
 import PropTypes from "prop-types";
+import Modal from "../utility/Modal";
 
 const MessageVow = () => {
   const shareParam = useQueryParam("share");
@@ -71,7 +72,7 @@ const UserCard = (shareID) => {
 
             <div className="overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 p-0">
               {/* <LoveAnimations type="growing" size={50} /> */}
-              <DotLottieIcon size="3" pathIndex="0" />
+              <DotLottieIcon size="3" loop={true} pathIndex="0" />
             </div>
           </div>
 
@@ -92,6 +93,10 @@ const MessageInput = (shareID) => {
     date:'',
   });
   const [location, setLocation] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
 
 useEffect(() =>{
@@ -136,6 +141,7 @@ useEffect(() =>{
     console.log('Form Values:', formValues); // Log the form values
     const res = await createMessage(shareID, formValues);
     console.log(res)
+    openModal()
     setFormValues({
       message: "",
       location: "",
@@ -145,6 +151,20 @@ useEffect(() =>{
 
   return (
     <form onSubmit={handleSubmit}>
+
+<Modal isOpen={isModalOpen} onClose={closeModal}>
+<DotLottieIcon size="15" loop={false} pathIndex="0" />
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded"
+          onClick={closeModal}
+        >
+          Close
+        </button>
+      </Modal>
+
+
+
+
     <div className="bg-slate-800 border border-slate-700 grid grid-cols-6 gap-2 rounded-xl p-2 text-sm">
       <h1 className="text-center text-slate-600 text-xl font-bold col-span-6">
         Send a VFY message

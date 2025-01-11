@@ -21,6 +21,8 @@ function Front() {
 
   return (
     <div className=" relative h-full  ">
+
+      <h1>HOME</h1>
       {/* <h1>Front</h1> */}
 
       {/* { credit == 'login' ? <Login/> : <Signup/>}  */}

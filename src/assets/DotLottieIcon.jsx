@@ -1,9 +1,10 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import PropTypes from 'prop-types';
 
-const DotLottieIcon = ({size,pathIndex}) => {
+const DotLottieIcon = ({size,loop,pathIndex}) => {
 
 const path = ["https://lottie.host/7a804753-cb79-4c10-a415-d86910f4750d/OSD8jvY8Zq.lottie",
+  "https://lottie.host/09b09848-4918-4535-846a-090e7f759c1a/DyNfD8Z7i4.lottie",
 
 ];
 
@@ -18,7 +19,7 @@ const path = ["https://lottie.host/7a804753-cb79-4c10-a415-d86910f4750d/OSD8jvY8
         padding: "-10em",
       }}
       src={path[pathIndex]}
-      loop
+      loop={loop}
       autoplay
       
     />
@@ -28,6 +29,7 @@ const path = ["https://lottie.host/7a804753-cb79-4c10-a415-d86910f4750d/OSD8jvY8
 DotLottieIcon.propTypes = {
   size: PropTypes.string.isRequired,
   pathIndex: PropTypes.string.isRequired,
+  loop: PropTypes.string.isRequired,
 };
 
 
