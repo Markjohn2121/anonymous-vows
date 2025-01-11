@@ -18,7 +18,7 @@ const userInfo =getSession();
 if(idParam == null || idParam != userInfo.data.userId){
 
 
-    window.location.replace('/?section=profile?id='+ userInfo.data.userId);
+    window.location.replace('/?section=profile&id='+ userInfo.data.userId);
 }
 
 
