@@ -17,7 +17,7 @@ function Main() {
   useEffect(() => {
     // List of valid sections
     const validSections = ["home", "join", "profile", "signup","login","vfymessage"];
-alert(section)
+// alert(section)
     // Redirect to "home" if the section is invalid or does not exist
     if (!section || !validSections.includes(section)) {
       navigate("/?section=home");
