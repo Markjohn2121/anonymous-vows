@@ -3,40 +3,166 @@ import { db } from "../firebase";
 import { ref, set, get, push } from "firebase/database";
 
 
+import React, { useState, useEffect } from "react";
+
+
+const fetchAccurateLocation = async () => {
+  const API_KEY = "AIzaSyCEPNninNmJrzzx-pfTs2VRnHfA6sXL5YU"; // Replace with your actual API key
+
+  try {
+    const response = await fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Accurate Location:", data.location);
+      console.log("Latitude:", data.location.lat);
+      console.log("Longitude:", data.location.lng);
+    } else {
+      console.error("Error fetching location:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
+fetchAccurateLocation();
+
+
+
+
+
+// Function to get the current date and time with AM/PM format
+const getCurrentDateTime = () => {
+  const now = new Date();
+  
+  // Format the date: DD/MM/YYYY
+  const date = now.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
+  // Format the time: HH:MM AM/PM
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // Enable AM/PM format
+  });
+
+  return `${date} ${time}`;
+}
+
+// Function to get current location (latitude and longitude)
+const getCurrentLocation = async (onSuccess, onError) => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        console.log(position.coords)
+        try {
+          const locationName = await reverseGeocode(latitude, longitude);
+          onSuccess(locationName);
+        } catch (error) {
+          onError("Failed to fetch location");
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        onError("Geolocation not available");
+      }
+    );
+  } else {
+    onError("Geolocation not supported by browser");
+  }
+};
+
+// Function to reverse geocode latitude and longitude to a human-readable address
+const reverseGeocode = async (latitude, longitude) => {
+  const apiKey = "e8bf495240874e469d5bf08e2e0e6bd2"; // Replace with your OpenCage API key
+  const response = await fetch(
+    `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
+  );
+  const data = await response.json();
+  const components = data.results[0].components;
+  const barangay = components.suburb || components.village || components.neighbourhood || 'Barangay not found';
+  const city = components.city || components.town || components.village || 'City not found';
+  const state = components.state || 'State not found';
+  const country = components.country || 'Country not found';
+
+return barangay +", " + city +" " + state
+  // return data.results[0]?.formatted || "Unknown location";
+};
+
+// Main component
+// const App = () => {
+//   const [currentDate, setCurrentDate] = useState("");
+//   const [location, setLocation] = useState("");
+
+//   useEffect(() => {
+//     // Set current date
+//     setCurrentDate(getCurrentDate());
+
+//     // Fetch current location
+//     getCurrentLocation(
+//       (locationName) => setLocation(locationName),
+//       (errorMessage) => setLocation(errorMessage)
+//     );
+//   }, []);
+
+//   return (
+//     <div>
+//       <p>Current Date: {currentDate}</p>
+//       <p>Current Location: {location}</p>
+//     </div>
+//   );
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Check if session exists and navigate to a new URL if it does
 const checkSessionAndNavigate = (location) => {
-
   const sessionInfo = getSession();
 
-if(location == 'login'){
-  if (sessionInfo.exists) {
+  if (location == "login") {
+    if (sessionInfo.exists) {
+      console.log("Session exists. Navigating to new URL.");
+      window.location.replace("/me/profile?id=" + sessionInfo.data.userId);
+    } else {
+      console.log("No session found.");
+      // window.location.replace('/me/login'); // Replace '/dashboard' with your target URL
+    }
+  } else if (location == "profile") {
+    if (sessionInfo.exists) {
+      console.log("Session exists. Navigating to new URL.");
 
-    console.log("Session exists. Navigating to new URL.");
-window.location.replace('/me/profile?id='+sessionInfo.data.userId); 
-  
-  } else {
-    console.log("No session found.");
-    // window.location.replace('/me/login'); // Replace '/dashboard' with your target URL
+      // window.location.replace('/me/profile?='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
+    } else {
+      console.log("No session found.");
+      window.location.replace("/me/login"); // Replace '/dashboard' with your target URL
+    }
   }
-
-}else if(location == "profile"){
-
-  if (sessionInfo.exists) {
-
-    console.log("Session exists. Navigating to new URL.");
-
-    // window.location.replace('/me/profile?='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
-  } else {
-    console.log("No session found.");
-    window.location.replace('/me/login'); // Replace '/dashboard' with your target URL
-  }
-
-}
-
-
-
-
 };
 
 // Set session data with a return value
@@ -60,7 +186,6 @@ const getSession = () => {
   }
 };
 
-
 // Remove session data with a return value
 const clearSession = () => {
   try {
@@ -71,10 +196,6 @@ const clearSession = () => {
     return { success: false, message: "Failed to clear session." };
   }
 };
-
-
-
-
 
 const checkUsername = async (username) => {
   console.log("Get all users");
@@ -98,7 +219,6 @@ const checkUsername = async (username) => {
         id.startsWith(username + "-")
       );
       const userid = userIds.filter((id) => id.startsWith(username + "-"));
-   
 
       console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
       return [isUsernameInIds, userid];
@@ -108,7 +228,7 @@ const checkUsername = async (username) => {
     }
   } catch (error) {
     console.error(error);
-    return [ false, "Error"];
+    return [false, "Error"];
   }
 };
 
@@ -134,18 +254,21 @@ const getAllUsers = async () => {
 };
 
 const isUserExists = (userId) => {
-  console.log("isUserExists");
+  // console.log("isUserExists");
   const userRef = ref(db, `users/${userId}`);
-  get(userRef)
+  return get(userRef)
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val().info);
+        return true;
       } else {
-        console.log("No data available");
+        // console.log("No data available");
+
+        return false;
       }
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
+      return false;
     });
 };
 
@@ -154,13 +277,15 @@ const createUser = async (data) => {
   console.log(result);
   if (!result[0]) {
     // Generate a unique ID for the user based on the current date and time
-    const userId = data.username + "-" +  new Date().toISOString().replace(/[:.-]/g, "");
+    const userId =
+      data.username + "-" + new Date().toISOString().replace(/[:.-]/g, "");
 
     // Optionally, you can also add user info if it's a new user
     set(ref(db, `users/${userId}/info`), {
       name: "anonymous",
       username: data.username,
       password: data.password,
+      note:'',
     });
 
     setSession({ userId: userId, username: data.username });
@@ -170,15 +295,23 @@ const createUser = async (data) => {
   }
 };
 
-const createMessage = (userId, message, location) => {
-  //   // Generate a reference to the messages path under the specific user
+const createMessage = (userId, data) => {
+  // Generate a reference to the messages path under the specific user
   const messagesRef = ref(db, `users/${userId}/messages`);
 
   // Create a new message with a unique ID under the messages path
-  push(messagesRef, {
-    vow: message,
-    location: location,
-  });
+  return push(messagesRef, {
+    vow: data.message,
+    location: data.location,
+    nickname: data.nickname,
+    date:data.date,
+  })
+    .then(() => {
+      return { success: true, message: "Message successfully written!" };
+    })
+    .catch((error) => {
+      return { success: false, message: "Failed to write message.", error: error };
+    });
 };
 
 const readUser = async (data) => {
@@ -187,49 +320,48 @@ const readUser = async (data) => {
   const result = await checkUsername(data.username);
 
   if (result[0]) {
-    
-
     // Optionally, you can also get the user info if it's an existing user
     const userRef = ref(db, `users/${result[1]}/info`);
-   return get(userRef)
+    return get(userRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
           // console.log(snapshot.val());
 
-    if(snapshot.val().password == data.password ){
-      setSession({ userId: result[1], username: data.username });
-      return [true,"Success"];
-    } else {
-      return [false,"Username or password is incorrect"];
+          if (snapshot.val().password == data.password) {
+            setSession({ userId: result[1], username: data.username });
+            return [true, "Success"];
+          } else {
+            return [false, "Username or password is incorrect"];
+          }
+        }
 
-    }
-
-
-
-          
-
-        } 
-
-          // console.log("No data available");
-          return [false,"Username or password is incorrect"];
-
-        
+        // console.log("No data available");
+        return [false, "Username or password is incorrect"];
       })
       .catch((error) => {
-
-
         console.error(error);
-        return [false,"Error"];
+        return [false, "Error"];
       });
-
-
-
   } else {
     console.log("User does not exist");
-    return [false,"Username or password is incorrect"];
+    return [false, "Username or password is incorrect"];
   }
+};
 
-
+const getNote = async (id) => {
+  // Optionally, you can also get the user info if it's an existing user
+  const userRef = ref(db, `users/${id}/info`);
+  return get(userRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val().note
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      
+      return '';
+    });
 };
 
 const readMessage = () => {
@@ -264,9 +396,11 @@ export {
   checkUsername,
   getAllUsers,
   isUserExists,
-  
   getSession,
   clearSession,
   checkSessionAndNavigate,
-
+  getNote,
+  getCurrentDateTime,
+  getCurrentLocation,
+  fetchAccurateLocation
 };
