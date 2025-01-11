@@ -148,7 +148,7 @@ const checkSessionAndNavigate = (location) => {
   if (location == "login") {
     if (sessionInfo.exists) {
       console.log("Session exists. Navigating to new URL.");
-      window.location.replace("/?section=profile?id=" + sessionInfo.data.userId);
+      window.location.replace("/?section=profile&id=" + sessionInfo.data.userId);
     } else {
       console.log("No session found.");
       // window.location.replace('/me/login'); // Replace '/dashboard' with your target URL
