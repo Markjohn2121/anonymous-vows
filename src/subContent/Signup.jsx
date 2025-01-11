@@ -37,7 +37,7 @@ const navigate = useNavigate();
    setErrorValue(result);
 
    if(result[0]){
-    navigate("/me/profile?id="+result[1]);
+    navigate("/?section=profile?id="+result[1]);
    }
 
  
