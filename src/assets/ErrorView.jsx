@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const ErrorView = ({err,closeModal,reload}) => {
+const ErrorView = ({ err, closeModal, reload }) => {
   return (
-    <div className=" border-2 border-[rgba(75,30,133,0.5)] rounded-[1.5em] bg-gradient-to-br from-[rgba(75,30,133,1)] to-[rgba(75,30,133,0.01)] text-white font-nunito p-[1em] flex justify-center items-center flex-col  backdrop-blur-[12px]">
+    <div className=" border-2 border-[rgba(75,30,133,0.5)] rounded-[1.5em] bg-gradient-to-br from-[rgba(75,30,133,1)] to-[rgba(75,30,133,0.01)] text-white font-nunito p-[1em] flex justify-center items-center flex-col  backdrop-blur-[60px]">
       <div>
         <div className="flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs z-50">
           <div className="error-alert cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg bg-[#232531] px-[10px]">
@@ -33,9 +33,11 @@ const ErrorView = ({err,closeModal,reload}) => {
       </div>
       <div>
         <button
-         
           className="mt-3 h-fit w-fit px-[1em] py-0   border-[1px] rounded-full flex justify-center items-center gap-[0.5em] overflow-hidden group hover:translate-y-[0.125em] duration-200 backdrop-blur-[12px]"
-          onClick={ () =>{closeModal();reload()}}
+          onClick={() => {
+            closeModal();
+            reload();
+          }}
         >
           Ok
         </button>
@@ -47,8 +49,7 @@ const ErrorView = ({err,closeModal,reload}) => {
 ErrorView.propTypes = {
   err: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
-  reload: PropTypes.func.isRequired,
-  
+  reload: PropTypes.func,
 };
 
 export default ErrorView;

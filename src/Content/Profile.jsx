@@ -1,5 +1,5 @@
 import {  useEffect } from "react";
-import { checkSessionAndNavigate, getSession } from "../utility/Crudutil";
+import { checkSessionAndNavigate, clearSession, getSession } from "../utility/Crudutil";
 import useQueryParam from "../utility/useQueryParam";
 
 function    Profile() {
@@ -7,7 +7,7 @@ function    Profile() {
 
 
 useEffect(() => {
-   
+//    clearSession()
 
 //
 });

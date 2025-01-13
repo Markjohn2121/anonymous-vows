@@ -29,7 +29,7 @@ const path = ["https://lottie.host/7a804753-cb79-4c10-a415-d86910f4750d/OSD8jvY8
 DotLottieIcon.propTypes = {
   size: PropTypes.string.isRequired,
   pathIndex: PropTypes.string.isRequired,
-  loop: PropTypes.string.isRequired,
+  loop: PropTypes.bool.isRequired,
 };
 
 

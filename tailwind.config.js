@@ -18,6 +18,10 @@ export default {
                     '0%': { opacity: '0', transform: 'scale(0) rotate(180deg)' },
                     '100%': { opacity: '1', transform: 'scale(1) rotate(0deg)' },
                 },
+                appearEnvelope: {
+                    '0%': { opacity: '0', transform: 'scale(0)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
+                },
                 clipExpand: {
                     '0%': { clipPath: 'polygon(50% 0%, 100% 0, 0 0)' },
                     '100%': { clipPath: 'polygon(50% 49%, 100% 0, 0 0)' },
@@ -26,6 +30,7 @@ export default {
             animation: {
                 slideIn: 'slideIn 0.5s forwards 1.5s',
                 appear: 'appear 0.5s forwards 1.7s',
+                appearEnvelope: 'appearEnvelope 0.3s forwards 0.3s',
                 clipExpand: 'clipExpand 0.5s forwards 1.6s',
             },
         },

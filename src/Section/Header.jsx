@@ -1,6 +1,13 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { clearSession, getSession } from "../utility/Crudutil";
+import useQueryParam from "../utility/useQueryParam";
 
 function Header() {
+
+
+  const param = useQueryParam("section");
+
   return (
     <>
       <div
@@ -26,26 +33,49 @@ function Header() {
         style={{
           padding: "0",
           margin: "0",
-          backgroundColor: "ButtonFace",
+          backgroundColor: "transparent",
           textAlign: "right",
         }}
       >
-        <div
-          style={{
-            marginRight: "1rem",
-          }}
-        >
-          <Link to="/me/cn/profile">
-            <p
-              style={{
-                color: "ButtonText",
-                backgroundColor: "ButtonHighlight",
-                fontSize: "1.1em",
-              }}
-            >
-              My Profile
-            </p>
-          </Link>
+        <div>
+          <div
+            className={
+              useQueryParam("section") == "home" ||  param == 'signup'
+                ? "hidden"
+                : " -mt-5 flex flex-col items-end pr-3 mb-5"
+            }
+          >
+            {getSession().exists ? (
+              <>
+              
+              {param == 'profile' ? (
+                
+                  <button className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black"
+                  onClick={()=>{
+                   if(clearSession()) window.location.replace("/?section=login");
+                  }}
+                  >
+                    Logout
+                  </button>
+                
+              ): (
+                <Link to="/?section=profile">
+                  <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
+                    My Profile
+                  </p>
+                </Link>
+              )
+              }
+                
+              </>
+            ) : (
+              <Link to="/?section=home">
+                <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
+                  JOIN NOW {}
+                </p>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </>

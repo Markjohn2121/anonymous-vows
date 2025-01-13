@@ -121,6 +121,7 @@ const MessageInput = ({ shareID }) => {
     nickname: "",
     date: "",
   });
+
   const [location, setLocation] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -170,6 +171,7 @@ const MessageInput = ({ shareID }) => {
         {isLoading ? (
           <Loader />
         ) : isSubmit ? (
+          
           <Envelope
             msg={msg}
             username={shareID.substring(0, shareID.indexOf("-"))}
@@ -233,7 +235,7 @@ const MessageInput = ({ shareID }) => {
 const Envelope = ({ msg, username, closeModal }) => {
   return (
     <>
-      <div className="card">
+      <div className="card opacity-0 animate-appearEnvelope">
         <div className=" flex justify-center mb-4">
           <p className="text-black text-sm font-bold  bg-green-300 px-6 py-1 rounded-md opacity-0 animate-appear">
             Your vfy message is delivered

@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     /* font-weight: 400; */
@@ -30,8 +29,7 @@ body {
     /* place-items: center; */
     /* min-width: 320px; */
     /* min-height: 100vh; */
-    background-image: url("./assets/hero_bg.png");  
-    background-position: center;
+    background-image: url("./assets/hero_bg.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -41,6 +39,7 @@ body {
   font-size: 3.2em;
   line-height: 1.1;
 } */
+
 
 /* button {
     border-radius: 8px;
@@ -54,9 +53,11 @@ body {
     transition: border-color 0.25s;
 } */
 
+
 /* button:hover {
     border-color: #646cff;
 } */
+
 
 /* button:focus,
 button:focus-visible {

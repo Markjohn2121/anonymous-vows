@@ -198,40 +198,47 @@ const clearSession = () => {
   }
 };
 
-const checkUsername = async (username) => {
+const checkUsername = async (username, timeout = 5000) => {
   console.log("Get all users");
   const usersRef = ref(db, "users");
 
-  try {
-    const snapshot = await get(usersRef);
+  // Timeout promise
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), timeout)
+  );
+
+  // Firebase get request promise
+  const getPromise = get(usersRef).then((snapshot) => {
     if (snapshot.exists()) {
       const data = snapshot.val();
       const userIds = Object.keys(data); // This should be an array
-      // console.log(userIds); // Log to check if it's an array
 
       console.log(`Checking if username ${username} exists in user IDs`);
 
       if (!Array.isArray(userIds)) {
         console.error("userIds is not an array");
-        return false;
+        return {isExist:false,err:true ,message: "userIds is not an array"};
       }
 
-      const isUsernameInIds = userIds.some((id) =>
-        id.startsWith(username + "-")
-      );
+      const isUsernameInIds = userIds.some((id) => id.startsWith(username + "-"));
       const userid = userIds.filter((id) => id.startsWith(username + "-"));
 
       console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
-      return [isUsernameInIds, userid];
+      // return [isUsernameInIds, userid];
+      return {isExist:isUsernameInIds,id:userid,err:false ,message: "userIds is not an array"};
     } else {
       console.log("No data available");
-      return [false, "No data available"];
+      return {isExist:false,err:false ,message: "userIds is not an array"};
     }
-  } catch (error) {
+  });
+
+  // Race the timeout promise against the get promise
+  return Promise.race([getPromise, timeoutPromise]).catch((error) => {
     console.error(error);
-    return [false, "Error"];
-  }
+    return {isExist:false,err:true ,message: error.message};
+  });
 };
+
 
 const getAllUsers = async () => {
   console.log("Get all users");
@@ -341,39 +348,61 @@ const createMessage = (userId, data, timeout = 5000) => {
 };
 
 
-const readUser = async (data) => {
+const readUser = async (data, timeout = 5000) => {
   console.log("Read user");
 
   const result = await checkUsername(data.username);
 
-  if (result[0]) {
-    // Optionally, you can also get the user info if it's an existing user
-    const userRef = ref(db, `users/${result[1]}/info`);
-    return get(userRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          // console.log(snapshot.val());
+  if (result.isExist) {
+    const userRef = ref(db, `users/${result.id}/info`);
 
-          if (snapshot.val().password == data.password) {
-            setSession({ userId: result[1], username: data.username });
-            return [true, "Success"];
-          } else {
-            return [false, "Username or password is incorrect"];
-          }
+    // Timeout promise
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), timeout)
+    );
+
+    // Firebase get request promise
+    const getPromise = get(userRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        if (snapshot.val().password === data.password) {
+          setSession({ userId: result.id, username: data.username });
+          window.location.replace("/?section=profile");
+          return { isExist: true, err: false, message: "Success" };
+        } else {
+          return {
+            isExist: false,
+            err: false,
+            message: "Username or password is incorrect",
+          };
         }
+      }
+      return {
+        isExist: true,
+        err: false,
+        message: "Username or password is incorrect",
+      };
+    });
 
-        // console.log("No data available");
-        return [false, "Username or password is incorrect"];
-      })
-      .catch((error) => {
-        console.error(error);
-        return [false, "Error"];
-      });
+    // Race the timeout promise against the get promise
+    return Promise.race([getPromise, timeoutPromise]).catch((error) => ({
+      isExist: false,
+      err: true,
+      message: error.message,
+    }));
   } else {
+
+    if(result.err){
+      return { isExist: false, err: true, message: "Something went wrong" };
+    }
     console.log("User does not exist");
-    return [false, "Username or password is incorrect"];
+    return { isExist: false, err: false, message: "Username or password is incorrect" };
   }
 };
+
+
+
+
+
 
 const getNote = async (id) => {
   // Optionally, you can also get the user info if it's an existing user
