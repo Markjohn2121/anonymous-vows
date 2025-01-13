@@ -4,6 +4,7 @@ import { ref, set, get, push } from "firebase/database";
 
 
 import React, { useState, useEffect } from "react";
+import { use } from 'react';
 
 
 const fetchAccurateLocation = async () => {
@@ -253,24 +254,37 @@ const getAllUsers = async () => {
   }
 };
 
-const isUserExists = (userId) => {
-  // console.log("isUserExists");
+const isUserExists = (userId, timeout = 5000) => {
   const userRef = ref(db, `users/${userId}`);
-  return get(userRef)
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return true;
-      } else {
-        // console.log("No data available");
+  let isTimedOut = false;
 
-        return false;
+  // Create a promise for the timeout
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => {
+      isTimedOut = true;
+      reject(new Error("Request timed out"));
+    }, timeout)
+  );
+
+  // Create the get promise
+  const getPromise = get(userRef).then((snapshot) => {
+    if (!isTimedOut) {
+      if (snapshot.exists()) {
+        return { user: true, err: false };
+      } else {
+        return { user: false, err: false };
       }
-    })
-    .catch((error) => {
-      // console.error(error);
-      return false;
-    });
+    }
+  });
+
+  // Race the get promise against the timeout promise
+  return Promise.race([getPromise, timeoutPromise]).catch((error) => ({
+    user: false,
+    err: true,
+    message: error.message,
+  }));
 };
+
 
 const createUser = async (data) => {
   const result = await checkUsername(data.username);
@@ -294,25 +308,38 @@ const createUser = async (data) => {
     return [false, "User already exists"];
   }
 };
-
-const createMessage = (userId, data) => {
-  // Generate a reference to the messages path under the specific user
+const createMessage = (userId, data, timeout = 5000) => {
   const messagesRef = ref(db, `users/${userId}/messages`);
+  let isTimedOut = false;
 
-  // Create a new message with a unique ID under the messages path
-  return push(messagesRef, {
+  // Create a promise for the timeout
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => {
+      isTimedOut = true;
+      reject(new Error("Request timed out"));
+    }, timeout)
+  );
+
+  // Create the push promise
+  const pushPromise = push(messagesRef, {
     vow: data.message,
     location: data.location,
     nickname: data.nickname,
-    date:data.date,
-  })
-    .then(() => {
+    date: data.date,
+  }).then(() => {
+    if (!isTimedOut) {
       return { success: true, message: "Message successfully written!" };
-    })
-    .catch((error) => {
-      return { success: false, message: "Failed to write message.", error: error };
-    });
+    }
+  });
+
+  // Race the push promise against the timeout promise
+  return Promise.race([pushPromise, timeoutPromise]).catch((error) => ({
+    success: false,
+    message: error.message === "Request timed out" ? "Request timed out" : "Failed to write message.",
+    error: error,
+  }));
 };
+
 
 const readUser = async (data) => {
   console.log("Read user");

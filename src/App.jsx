@@ -16,7 +16,7 @@ function App() {
             <Route path="/me" element={<Main key={0} />} />
             <Route path="/" element={<Main key={1} />} />
             {/* Fallback route to redirect to the root path */}
-            {/* <Route path="*" element={<Navigate to="/" />} /> */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <footer className="App-footer">
