@@ -60,9 +60,10 @@ const UserCard = ({ shareID }) => {
          
         } else {
           
-          setUsername("vfy user not found");
-          setError(false)
+          setUsername("VFY PROFILE LINK NOT FOUND!");
+          openModal()
           setLoading(false)
+          setError(true)
         }
       } else {
         setLoading(false)

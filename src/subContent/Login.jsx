@@ -6,7 +6,7 @@ import Loader from "../assets/Loader";
 
 function Login() {
   const [state, setState] = useState({
-    errorValue: [true, ""],
+    errorValue: {isExist:true,err:false,message:''},
     formValues: { username: "", password: "" },
     isModalOpen: false,
     isLoading: false,
@@ -20,7 +20,7 @@ function Login() {
     setState((prevState) => ({
       ...prevState,
       formValues: { ...prevState.formValues, [name]: value },
-      errorValue: [true, ""],
+      errorValue: {isExist:true,err:false,message:''} ,
     }));
   };
 
@@ -116,8 +116,8 @@ function Login() {
               {!errorValue.isExist && (
                 <p
                   className={
-                    !errorValue[0]
-                      ? "text-white text-sm w-full text-center bg-red-800 p-1"
+                    !errorValue.isExist
+                      ? "text-white text-sm w-full text-center bg-red-800 p-1 rounded-md opacity-0 animate-appearEnvelope"
                       : ""
                   }
                 >

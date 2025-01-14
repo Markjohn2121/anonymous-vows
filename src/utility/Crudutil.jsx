@@ -404,21 +404,59 @@ const readUser = async (data, timeout = 5000) => {
 
 
 
-const getNote = async (id) => {
-  // Optionally, you can also get the user info if it's an existing user
+const getNote = async (id, timeout = 5000) => {
   const userRef = ref(db, `users/${id}/info`);
-  return get(userRef)
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val().note
-      }
+
+  // Timeout promise
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), timeout)
+  );
+
+  // Firebase get request promise
+  const getPromise = get(userRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      return snapshot.val().note;
+    }
+    return '';
+  });
+
+  // Race the timeout promise against the get promise
+  return Promise.race([getPromise, timeoutPromise]).catch((error) => {
+    console.error(error);
+    return '';
+  });
+};
+
+const updateUserNote = async (id, note, timeout = 5000) => {
+  const userRef = ref(db, `users/${id}/info`);
+
+  // Timeout promise
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), timeout)
+  );
+
+  // Firebase set request promise
+  const setPromise = set(userRef, { note })
+    .then(() => {
+      return { success: true, err:false, message: "Note successfully written!" };
     })
     .catch((error) => {
-      console.log(error)
-      
-      return '';
+      console.error(error);
+      return { success: false, err:false, message: "Something went wrong" };
     });
+
+  // Race the timeout promise against the set promise
+  return Promise.race([setPromise, timeoutPromise]).catch((error) => ({
+    success: false,
+    err:true,
+    message: error.message,
+  }));
 };
+
+
+
+
+
 
 const readMessage = () => {
   console.log("Read message");
@@ -458,5 +496,6 @@ export {
   getNote,
   getCurrentDateTime,
   getCurrentLocation,
-  fetchAccurateLocation
+  fetchAccurateLocation,
+  updateUserNote,
 };

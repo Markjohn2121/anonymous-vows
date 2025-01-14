@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 
 const ErrorView = ({ err, closeModal, reload }) => {
   return (
-    <div className=" border-2 border-[rgba(75,30,133,0.5)] rounded-[1.5em] bg-gradient-to-br from-[rgba(75,30,133,1)] to-[rgba(75,30,133,0.01)] text-white font-nunito p-[1em] flex justify-center items-center flex-col  backdrop-blur-[60px]">
+    <div className=" border-2 border-[rgba(75,30,133,0.5)] rounded-[1.5em] bg-gradient-to-br from-[rgba(75,30,133,1)] to-[rgba(75,30,133,0.01)] text-white font-nunito p-[1em] flex justify-center items-center flex-col  backdrop-blur-[60px] opacity-0 animate-appearEnvelope">
       <div>
         <div className="flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs z-50">
-          <div className="error-alert cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg bg-[#232531] px-[10px]">
-            <div className="flex gap-2">
-              <div className="text-[#d65563] bg-white/5 backdrop-blur-xl p-1 rounded-lg">
+          <div className="error-alert cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg bg-[#232531] px-[10px] ">
+            <div className="flex gap-2 ">
+              <div className="text-[#d65563] bg-white/5 backdrop-blur-xl p-1 rounded-lg ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
