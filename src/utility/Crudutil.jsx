@@ -453,6 +453,64 @@ const updateUserNote = async (id, note, timeout = 5000) => {
   }));
 };
 
+const getAllMessageIds = async (userId, timeout = 5000) => {
+  const messagesRef = ref(db, `users/${userId}/messages`);
+
+  // Timeout promise
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), timeout)
+  );
+
+  // Firebase get request promise
+  const getPromise = get(messagesRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      const messages = Object.entries(data).map(([id, message]) => ({
+        id,
+        date: message.date,
+      }));
+      return { success: true, messages };
+    }
+    return { success: false, message: "No messages found." };
+  });
+
+  // Race the timeout promise against the get promise
+  return Promise.race([getPromise, timeoutPromise]).catch((error) => ({
+    success: false,
+    message: error.message,
+  }));
+};
+
+
+
+
+
+  // const getAllMessageIds = async (userId, timeout = 5000) => {
+  //   const messagesRef = ref(db, `users/${userId}/messages`);
+
+  //   // Timeout promise
+  //   const timeoutPromise = new Promise((_, reject) =>
+  //     setTimeout(() => reject(new Error("Request timed out")), timeout)
+  //   );
+
+  //   // Firebase get request promise
+  //   const getPromise = get(messagesRef).then((snapshot) => {
+  //     if (snapshot.exists()) {
+  //       const data = snapshot.val();
+  //       const messageIds = Object.keys(data); // Extract the message IDs
+  //       return { success: true, messageIds };
+  //     }
+  //     return { success: false, message: "No messages found." };
+  //   });
+
+  //   // Race the timeout promise against the get promise
+  //   return Promise.race([getPromise, timeoutPromise]).catch((error) => ({
+  //     success: false,
+  //     message: error.message,
+  //   }));
+  // };
+
+
 
 
 
@@ -498,4 +556,5 @@ export {
   getCurrentLocation,
   fetchAccurateLocation,
   updateUserNote,
+  getAllMessageIds,
 };

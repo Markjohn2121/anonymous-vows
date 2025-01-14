@@ -19,9 +19,9 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
-        <footer className="App-footer">
+        {/* <footer className="App-footer">
           <Footer />
-        </footer>
+        </footer> */}
       </div>
     </Router>
   );

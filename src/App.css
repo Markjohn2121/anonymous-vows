@@ -14,7 +14,7 @@
         display: grid;
         grid-template-rows: 1fr 7fr 1fr;
         grid-template-columns: 1fr;
-        grid-template-areas: "header" "main" "footer";
+        grid-template-areas: "header" "main" "main";
     }
     
     h1 {

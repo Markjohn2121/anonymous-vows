@@ -2,6 +2,7 @@ import { act, useEffect, useState } from "react";
 import {
   checkSessionAndNavigate,
   clearSession,
+  getAllMessageIds,
   getNote,
   getSession,
   isUserExists,
@@ -34,7 +35,7 @@ function Profile() {
     }
 
     //
-  }, []);
+  }, [userInfo,idParam]);
 
   //  Action LOading and Error view
 
@@ -86,7 +87,7 @@ function Profile() {
         </div>
 
         <div className=" relative  flex-grow px-2">
-          <Messages Info={userInfo} />
+          <Messages Info={userInfo} reload={isReload} />
         </div>
       </div>
     </div>
@@ -181,16 +182,38 @@ const ProfileCard = ({ Info, reload, action }) => {
   );
 };
 
-
-
 const Messages = ({ Info, reload, action }) => {
+    const [messages, setMessages] = useState([]);
+    const [error, setError] = useState(null);
+    const [messageCount, setMessageCount] = useState(0);
+
+    useEffect(()=>{
+        const fetchMessages = async () => {
+            const result = await getAllMessageIds(Info.data.userId)
+            
+            if (result.success) {
+              setMessages(result.messages);
+              setMessageCount(result.messages.length)
+            } else {
+              setError(result.message);
+            }
+          };
+      
+          fetchMessages();
+
+        
+
+
+
+
+    },[reload])
+
   return (
     <div className="flex flex-col justify-center  h-full">
-      <div className="flex overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow  px-4 py-2 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out  hover:ring-black ">
-        <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>
+      <div className="flex overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow  px-4 py-2 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out  hover:ring-black mt-5">
+        
         <div className="flex items-center">
-    
-{/* ICON HERE */}
+          {/* ICON HERE */}
 
           <span className="ml-1 text-white">Messages</span>
         </div>
@@ -209,15 +232,86 @@ const Messages = ({ Info, reload, action }) => {
             ></path>
           </svg>
           <span className="inline-block tabular-nums tracking-wider font-display font-medium text-white">
-            6
-          </span>
+            {messageCount}         </span>
         </div>
       </div>
 
-      <div className="relative bg-black flex-grow mt-1">
-        <h1>mess</h1>
+      <div className="relative  flex-grow   rounded-lg ">
+      <div className="relative flex-grow mt-1 py-4  rounded-lg">
+  <div className=" h-80 overflow-y-auto  rounded-lg flex gap-2 flex-wrap justify-center  px-1">
+    {messages.slice().reverse().map((message) => (
+      <MessagesList key={message.id} messageId={message.id} messageDate={message.date} />
+    ))}
+  </div>
+</div>
+
+      
       </div>
     </div>
+  );
+};
+
+const MessagesList = ({messageId,messageDate}) => {
+
+
+    const showMsg = () =>{
+
+        alert(messageId)
+    }
+  return (
+    <>
+      <div className="group relative cursor-pointer w-full sm:w-full md:w-full lg:w-auto"
+      onClick={showMsg}
+      >
+        <div className="relative overflow-hidden rounded-2xl bg-slate-950 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-emerald-500/10">
+          <div className="absolute -left-16 -top-16 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/0 blur-2xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70"></div>
+
+
+          <div className="relative p-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-30 blur-sm transition-opacity duration-300 group-hover:opacity-40"></div>
+                  <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900">
+                    <svg
+                      className="h-6 w-6 text-emerald-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-white text-sm">anonymous</h3>
+                  <p className="text-sm text-slate-400">
+                    {messageId}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs text-slate-400">{messageDate}</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500">
+                  <span className="h-1 w-1 rounded-full bg-emerald-500"></span>
+                  New
+                </span>
+              </div>
+
+            </div>
+
+         
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -227,11 +321,11 @@ ProfileCard.propTypes = {
   action: PropTypes.func,
 };
 
-
-
-
-
-
+MessagesList.propTypes = {
+    messageId: PropTypes.string.isRequired,
+    messageDate: PropTypes.string.isRequired,
+   
+  };
 
 Messages.propTypes = {
   Info: PropTypes.object.isRequired,
