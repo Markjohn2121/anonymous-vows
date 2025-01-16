@@ -1,38 +1,52 @@
-// import { useEffect } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import PropTypes from "prop-types";
-// import { db } from "../firebase";
-// import { ref, set, push } from "firebase/database";
+// import React, { useState, useEffect } from 'react';
 
-
-import UseQueryParam from "../utility/useQueryParam";
-
-
-
+import { useEffect } from "react";
+import { useState } from "react";
 
 function Front() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
 
-  // const { section } = useParams(); // Get 'section' from route parameters
-  const id = UseQueryParam("id");
+  useEffect(() => {
+    // Listen for the 'beforeinstallprompt' event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e); // Store the event
+      setShowInstallButton(true); // Show the install button
+    });
 
-  console.log("id", id);
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('beforeinstallprompt', () => {});
+    };
+  }, []);
 
-
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt(); // Show the install prompt
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        setDeferredPrompt(null); // Clear the deferred prompt
+        setShowInstallButton(false); // Hide the install button
+      });
+    }
+  };
 
   return (
-    <div className=" relative h-full  ">
-
-      <h1>HOME</h1>
-      {/* <h1>Front</h1> */}
-
-      {/* { credit == 'login' ? <Login/> : <Signup/>}  */}
-
-      {/* {credit === "login" ? <Login /> : credit === "signup" ? <Signup /> : null} */}
+    <div>
+      <h1>Welcome to Vow for You Thank you</h1>
+      {/* Show the install button if it's available */}
+      {showInstallButton && (
+        <button onClick={handleInstallClick}>
+          Install App
+        </button>
+      )}
     </div>
   );
 }
-// Front.propTypes = {
-//   credit: PropTypes.bool.isRequired,
-// };
 
 export default Front;

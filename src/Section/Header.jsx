@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { clearSession, getSession } from "../utility/Crudutil";
 import useQueryParam from "../utility/useQueryParam";
+import DownloadButton from "../utility/DownloadButton";
 
 function Header() {
 
@@ -38,13 +39,19 @@ function Header() {
         }}
       >
         <div>
+
+          
           <div
             className={
               useQueryParam("section") == "home" ||  param == 'signup'
                 ? "hidden"
-                : " -mt-5 flex flex-col items-end pr-3 mb-5"
+                : " -mt-5 flex flex-row items-center justify-end pr-3 mb-5"
             }
           >
+              <div>
+              <DownloadButton/>
+           </div>
+           
             {getSession().exists ? (
               <>
               
@@ -75,7 +82,11 @@ function Header() {
                 </p>
               </Link>
             )}
+
+          
+             
           </div>
+          
         </div>
       </div>
     </>

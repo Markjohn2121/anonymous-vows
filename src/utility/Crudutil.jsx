@@ -225,7 +225,7 @@ const checkUsername = async (username, timeout = 5000) => {
 
       console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
       // return [isUsernameInIds, userid];
-      return {isExist:isUsernameInIds,id:userid,err:false ,message: "userIds is not an array"};
+      return {isExist:isUsernameInIds,id:userid[0],err:false ,message: "userIds is not an array"};
     } else {
       console.log("No data available");
       return {isExist:false,err:false ,message: "userIds is not an array"};
@@ -364,6 +364,7 @@ const readUser = async (data, timeout = 5000) => {
     // Firebase get request promise
     const getPromise = get(userRef).then((snapshot) => {
       if (snapshot.exists()) {
+      
         if (snapshot.val().password === data.password) {
           setSession({ userId: result.id, username: data.username });
           window.location.replace("/?section=profile");
@@ -428,7 +429,7 @@ const getNote = async (id, timeout = 5000) => {
 };
 
 const updateUserNote = async (id, note, timeout = 5000) => {
-  const userRef = ref(db, `users/${id}/info`);
+  const userRef = ref(db, `users/${id}/info/note`);
 
   // Timeout promise
   const timeoutPromise = new Promise((_, reject) =>
@@ -436,7 +437,7 @@ const updateUserNote = async (id, note, timeout = 5000) => {
   );
 
   // Firebase set request promise
-  const setPromise = set(userRef, { note })
+  const setPromise = set(userRef, note )
     .then(() => {
       return { success: true, err:false, message: "Note successfully written!" };
     })

@@ -14,7 +14,7 @@ import ErrorView from "../assets/ErrorView";
 import Loader from "../assets/Loader";
 
 const MessageVow = () => {
-  const shareIdParam = useQueryParam("shareid");
+  const shareIdParam  = useQueryParam("shareid").startsWith("web+vfymessage://") ? useQueryParam("shareid").split("web+vfymessage://")[1] : useQueryParam("shareid");
 
   return (
     <div className="h-full flex flex-col items-center justify-start w-full gap-6">
@@ -134,7 +134,7 @@ const MessageInput = ({ shareID }) => {
       (locationName) => setLocation(locationName),
       (errorMessage) => setLocation(errorMessage)
     );
-  }, []);
+  }, [shareID]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

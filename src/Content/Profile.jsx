@@ -13,6 +13,7 @@ import Modal from "../utility/Modal";
 import Loader from "../assets/Loader";
 import ErrorView from "../assets/ErrorView";
 import PropTypes from "prop-types";
+import useMessages from "../utility/Mesagjng";
 
 function Profile() {
   const idParam = useQueryParam("id");
@@ -25,7 +26,19 @@ function Profile() {
   const [isReload, setIsReload] = useState(false);
   const [allowReload, setAllowReload] = useState(false);
 
+
+
+
+
+  
   useEffect(() => {
+
+
+
+
+
+
+    
     //    clearSession()
     checkSessionAndNavigate("profile");
     const userInfo = getSession();
@@ -101,6 +114,7 @@ const ProfileCard = ({ Info, reload, action }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setNote(value);
+    
   };
 
   const updateNote = async () => {
@@ -182,24 +196,29 @@ const ProfileCard = ({ Info, reload, action }) => {
   );
 };
 
+
+
+
 const Messages = ({ Info, reload, action }) => {
-    const [messages, setMessages] = useState([]);
-    const [error, setError] = useState(null);
+    // const [messages, setMessages] = useState([]);
+    // const [error, setError] = useState(null);
     const [messageCount, setMessageCount] = useState(0);
 
+    const { messages, error } = useMessages(Info.data.userId);
+
     useEffect(()=>{
-        const fetchMessages = async () => {
-            const result = await getAllMessageIds(Info.data.userId)
+        // const fetchMessages = async () => {
+        //     const result = await getAllMessageIds(Info.data.userId)
             
-            if (result.success) {
-              setMessages(result.messages);
-              setMessageCount(result.messages.length)
-            } else {
-              setError(result.message);
-            }
-          };
+        //     if (result.success) {
+        //       setMessages(result.messages);
+        //       setMessageCount(result.messages.length)
+        //     } else {
+        //       setError(result.message);
+        //     }
+        //   };
       
-          fetchMessages();
+        //   fetchMessages();
 
         
 
@@ -239,7 +258,7 @@ const Messages = ({ Info, reload, action }) => {
       <div className="relative  flex-grow   rounded-lg ">
       <div className="relative flex-grow mt-1 py-4  rounded-lg">
   <div className=" h-80 overflow-y-auto  rounded-lg flex gap-2 flex-wrap justify-center  px-1">
-    {messages.slice().reverse().map((message) => (
+    {messages.map((message) => (
       <MessagesList key={message.id} messageId={message.id} messageDate={message.date} />
     ))}
   </div>
