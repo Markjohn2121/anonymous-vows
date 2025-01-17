@@ -39,7 +39,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('message', (event) => {
 
-
+    console.log('Received push data from app:', event);
     if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
         const message = event.data.payload;
         console.log('Received push data from app:', message);
