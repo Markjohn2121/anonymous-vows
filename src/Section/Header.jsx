@@ -43,7 +43,7 @@ function Header() {
           
           <div
             className={
-              useQueryParam("section") == "home" ||  param == 'signup'
+                param == 'signup'
                 ? "hidden"
                 : " -mt-5 flex flex-row items-center justify-end pr-3 mb-5"
             }
