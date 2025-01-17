@@ -18,11 +18,11 @@ function Main() {
 
     
     // List of valid sections
-    const validSections = ["home", "join", "profile", "signup","login","vfymessage"];
+    const validSections = ["home",  "profile", "signup","login","vfymessage"];
 // alert(section)
     // Redirect to "home" if the section is invalid or does not exist
     if (!section || !validSections.includes(section)) {
-      navigate("/?section=profile");
+      navigate("/?section=home");
     }
   }, [section,navigate]);
 
@@ -35,9 +35,9 @@ function Main() {
     <div className="main relative h-full " key={"main1"}>
       {section && (
         <div className=" relative h-full " style={{ padding: "0", margin: "0" }} key={"main-div1"}>
-       {section === "" && <Profile key={2} />}
+       {section === "" && <Front key={2} />}
           {section === "home" && <Front key={2} />}
-          {section === "join" && <Join />}
+          
           {section === "profile" && <Profile />}
           {section === "signup" && <Signup />}
           {section === "login" && <Login />}

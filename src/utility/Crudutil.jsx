@@ -7,39 +7,39 @@ import React, { useState, useEffect } from "react";
 import { use } from 'react';
 
 
-const fetchAccurateLocation = async () => {
-  const API_KEY = "AIzaSyCEPNninNmJrzzx-pfTs2VRnHfA6sXL5YU"; // Replace with your actual API key
+// const fetchAccurateLocation = async () => {
+//   const API_KEY = "AIzaSyCEPNninNmJrzzx-pfTs2VRnHfA6sXL5YU"; // Replace with your actual API key
 
-  try {
-    const response = await fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
+//   try {
+//     const response = await fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({}),
+//     });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Accurate Location:", data.location);
-      console.log("Latitude:", data.location.lat);
-      console.log("Longitude:", data.location.lng);
-    } else {
-      console.error("Error fetching location:", response.statusText);
-    }
-  } catch (error) {
-    console.error("Error:", error.message);
-  }
-};
+//     if (response.ok) {
+//       const data = await response.json();
+//       console.log("Accurate Location:", data.location);
+//       console.log("Latitude:", data.location.lat);
+//       console.log("Longitude:", data.location.lng);
+//     } else {
+//       console.error("Error fetching location:", response.statusText);
+//     }
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//   }
+// };
 
-fetchAccurateLocation();
+// fetchAccurateLocation();
 
 
 
 
 
 // Function to get the current date and time with AM/PM format
-const getCurrentDateTime = () => {
+const getCurrentDateTime = (get = 'full') => {
   const now = new Date();
   
   // Format the date: DD/MM/YYYY
@@ -56,7 +56,11 @@ const getCurrentDateTime = () => {
     hour12: true, // Enable AM/PM format
   });
 
-  return `${date} ${time}`;
+  if(get == 'time') return time;
+  if(get == 'date') return date;
+  if(get == 'full') return `${date} ${time}`;
+
+  
 }
 
 // Function to get current location (latitude and longitude)
@@ -158,7 +162,7 @@ const checkSessionAndNavigate = (location) => {
     if (sessionInfo.exists) {
       console.log("Session exists. Navigating to new URL.");
 
-      // window.location.replace('/me/profile?='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
+      window.location.replace('/me/profile?='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
     } else {
       console.log("No session found.");
       window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
@@ -557,7 +561,7 @@ export {
   getNote,
   getCurrentDateTime,
   getCurrentLocation,
-  fetchAccurateLocation,
+ 
   updateUserNote,
   getAllMessageIds,
 };

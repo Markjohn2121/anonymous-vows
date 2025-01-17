@@ -3,6 +3,7 @@ import {
   checkSessionAndNavigate,
   clearSession,
   getAllMessageIds,
+  getCurrentDateTime,
   getNote,
   getSession,
   isUserExists,
@@ -34,14 +35,16 @@ function Profile() {
   useEffect(() => {
 
 
-
+if(idParam === null){
+  //    clearSession()
+  checkSessionAndNavigate("profile");
+}
 
 
 
     
-    //    clearSession()
-    checkSessionAndNavigate("profile");
-    const userInfo = getSession();
+  
+
     console.log(userInfo);
     if (idParam == null || idParam != userInfo.data.userId) {
       window.location.replace("/?section=profile&id=" + userInfo.data.userId);
@@ -100,7 +103,11 @@ function Profile() {
         </div>
 
         <div className=" relative  flex-grow px-2">
-          <Messages Info={userInfo} reload={isReload} />
+
+          {userInfo.exists &&(
+ <Messages Info={userInfo} reload={isReload} />
+          )}
+         
         </div>
       </div>
     </div>
@@ -160,11 +167,13 @@ const ProfileCard = ({ Info, reload, action }) => {
     fetchUserData();
   }, [reload]);
 
+ 
+
   return (
     <div className="w-full h-fit flex flex-col justify-center gap-2  bg-white dark:bg-gray-800 rounded-lg shadow p-2">
       <div className="flex gap-0">
         <div>
-          <img alt="" className="bg-purple-200 w-24 h-24 shrink-0 rounded-lg" />
+          <img src="/icon/icon_144.png" alt="" className="bg-purple-200 w-24 h-24 shrink-0 rounded-xl" />
           <div className="mt-3">
             <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-nowrap  px-4">
               Share
@@ -202,10 +211,12 @@ const ProfileCard = ({ Info, reload, action }) => {
 const Messages = ({ Info, reload, action }) => {
     // const [messages, setMessages] = useState([]);
     // const [error, setError] = useState(null);
-    const [messageCount, setMessageCount] = useState(0);
+
 
     const { messages, error } = useMessages(Info.data.userId);
+  // console.log()
 
+  // setMessageCount(messages.length)
     useEffect(()=>{
         // const fetchMessages = async () => {
         //     const result = await getAllMessageIds(Info.data.userId)
@@ -228,15 +239,13 @@ const Messages = ({ Info, reload, action }) => {
     },[reload])
 
   return (
-    <div className="flex flex-col justify-center  h-full">
-      <div className="flex overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow  px-4 py-2 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out  hover:ring-black mt-5">
+    <div className="flex flex-col justify-center h-full">
+      <div className="flex flex-col overflow-hidden items-baseline text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow  px-4 py-2 w-fit whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out  hover:ring-black mt-3">
         
-        <div className="flex items-center">
+        <div className="flex items-center ">
           {/* ICON HERE */}
 
-          <span className="ml-1 text-white">Messages</span>
-        </div>
-        <div className="ml-2 flex items-center gap-1 text-sm md:flex">
+          <div className=" flex items-center gap-1 text-sm md:flex">
           <svg
             className="w-4 h-4 text-red-500 transition-all duration-300 "
             aria-hidden="true"
@@ -250,18 +259,25 @@ const Messages = ({ Info, reload, action }) => {
               fillRule="evenodd"
             ></path>
           </svg>
-          <span className="inline-block tabular-nums tracking-wider font-display font-medium text-white">
-            {messageCount}         </span>
+          <span className="inl tabular-nums tracking-wider font-display font-normal text-white bg-red-600 rounded-md p-1">
+          {messages.length}</span>
+          <span className=" text-white">Messages</span>
         </div>
+
+          
+        </div>
+     
       </div>
 
       <div className="relative  flex-grow   rounded-lg ">
       <div className="relative flex-grow mt-1 py-4  rounded-lg">
   <div className=" h-80 overflow-y-auto  rounded-lg flex gap-2 flex-wrap justify-center  px-1">
+  
     {messages.map((message) => (
       <MessagesList key={message.id} messageId={message.id} messageDate={message.date} />
     ))}
   </div>
+  
 </div>
 
       
@@ -270,12 +286,16 @@ const Messages = ({ Info, reload, action }) => {
   );
 };
 
-const MessagesList = ({messageId,messageDate}) => {
+const MessagesList = ({messageId,messageDate =''}) => {
+let date = messageDate.slice(0, 10)
 
+
+const isDateMatch = date == getCurrentDateTime('date')
+// console.log(isDateMatch)
 
     const showMsg = () =>{
 
-        alert(messageId)
+        alert(date == getCurrentDateTime('date'))
     }
   return (
     <>
@@ -309,18 +329,20 @@ const MessagesList = ({messageId,messageDate}) => {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-white text-sm">anonymous</h3>
+                  <h3 className="font-semibold text-white text-sm">anonymous vow</h3>
                   <p className="text-sm text-slate-400">
-                    {messageId}
+                    
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-col items-end gap-1">
-                <span className="text-xs text-slate-400">{messageDate}</span>
+                <span className="text-[0.4em] text-slate-400 -mt-2">{messageDate}</span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500">
                   <span className="h-1 w-1 rounded-full bg-emerald-500"></span>
-                  New
+                  { isDateMatch ? (
+                    'New'
+                  ): ' ' }
                 </span>
               </div>
 
@@ -342,7 +364,7 @@ ProfileCard.propTypes = {
 
 MessagesList.propTypes = {
     messageId: PropTypes.string.isRequired,
-    messageDate: PropTypes.string.isRequired,
+    messageDate: PropTypes.string.isRequired.toString,
    
   };
 

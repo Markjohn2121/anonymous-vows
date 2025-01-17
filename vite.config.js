@@ -9,10 +9,10 @@ export default defineConfig({
             registerType: 'autoUpdate',
             manifest: {
                 name: "Vow for You",
-                short_name: "VFY",
-                description: "Anonymous messages",
-                theme_color: "#ffffff",
-                background_color: "#ffffff",
+                short_name: "vow for you",
+                description: "Anonymous vow messages for every one",
+                theme_color: "#181515ca",
+                background_color: "#181515ca",
                 display: "standalone",
                 start_url: "/",
                 icons: [{
