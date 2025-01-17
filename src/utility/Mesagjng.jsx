@@ -47,23 +47,23 @@ const useMessages = (userId) => {
         //     icon: '/icon/icon_192.png',
         //   },
         // });
-        navigator.serviceWorker.register('/sw.js').then((registration) => {
-          console.log('Service Worker registered:', registration);
-        }).catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
+        // navigator.serviceWorker.register('/sw.js').then((registration) => {
+        //   console.log('Service Worker registered:', registration);
+        // }).catch((error) => {
+        //   console.error('Service Worker registration failed:', error);
+        // });
         
 
         navigator.serviceWorker.ready.then((registration) => {
           if (registration.active) {
-            console.log('Sending push data to service worker:', message);
+            console.log('Sending push data to service worker:');
             // Send the message only if the service worker is active
             registration.active.postMessage({
               type: 'PUSH_NOTIFICATION',
               payload: {
                 title: 'New Message',
                 body: message.vow,
-                icon: '/icon/icon_192x192.png',
+                icon: '/public/icon/icon_192.png',
               },
             });
           }

@@ -163,6 +163,8 @@ const checkSessionAndNavigate = (location) => {
       console.log("No session found.");
       window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
     }
+  }else{
+    window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
   }
 };
 
@@ -180,7 +182,7 @@ const setSession = (userData) => {
 // Get session data and return true if session exists, false otherwise, along with the session values
 const getSession = () => {
   const session = localStorage.getItem("userVFYSession");
-  if (session !== null) {
+  if (session !== null || session != null) {
     return { exists: true, data: JSON.parse(session) };
   } else {
     return { exists: false, data: null };

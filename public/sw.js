@@ -1,4 +1,5 @@
 self.addEventListener('install', (event) => {
+
     console.log('Service Worker installed:', event);
 });
 
@@ -37,16 +38,16 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-    console.log('Received message in service worker:', event);
+
 
     if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
         const message = event.data.payload;
         console.log('Received push data from app:', message);
 
         // Show notification from service worker
-        self.registration.showNotification(message.title, {
-            body: message.body,
-            icon: message.icon,
+        self.registration.showNotification('neww', {
+            body: 'new message',
+            icon: '/public/icon/icon_192.png',
             tag: 'new-message', // Optional: gives a unique ID to the notification
             renotify: true, // Optional: ensures the notification will be re-shown if a new one comes in
         }).catch((err) => {
