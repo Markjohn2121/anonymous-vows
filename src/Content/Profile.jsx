@@ -365,18 +365,18 @@ const MessageCard = ({messageData,close}) => {
   return (
 
 
-    <div className=" w-full ">
+    <div className="relative w-full ">
        <div className="w-full bg-gradient-to-r from-pink-500 from-10% via-sky-700 via-30% to-pink-500 to-90% bg-[length:400%] rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3  hover:shadow-2xl hover:shadow-pink-300 transition-shadow opacity-0 animate-appearEnvelope">
-       <div className=" flex flex-col justify-center items-center w-full min-h-48 h-auto bg-zinc-300 rounded-2xl text-black p-4 w-full">
+       <div className=" flex flex-col justify-center items-center w-full min-h-48 h-auto bg-zinc-300 rounded-2xl text-black p-4 relative">
         <div className="text-left items-start  w-full">
           <p className="text-base">Dear {getSession().data.username},</p>
         </div>
-        <div>
+        <div className="w-full">
         <p className=" text-base justify-start text-left" style={{textIndent:'1rem',fontFamily:'Dancing Script cursive'}}>{messageData.vow}</p>
 
         </div>
         <div className="mt-5">
-          <p className="">VFY</p>
+          <p className="">-VFY-</p>
         </div>
        
 </div>
