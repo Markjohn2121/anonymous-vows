@@ -75,16 +75,16 @@ const getCurrentLocation = async (onSuccess, onError) => {
           const locationName = await reverseGeocode(latitude, longitude);
           onSuccess(locationName);
         } catch (error) {
-          onError("Failed to fetch location");
+          onError("Unknown");
         }
       },
       (error) => {
         console.error("Geolocation error:", error);
-        onError("Geolocation not available");
+        onError("Unknown");
       }
     );
   } else {
-    onError("Geolocation not supported by browser");
+    onError("Unknown");
   }
 };
 
@@ -96,10 +96,10 @@ const reverseGeocode = async (latitude, longitude) => {
   );
   const data = await response.json();
   const components = data.results[0].components;
-  const barangay = components.suburb || components.village || components.neighbourhood || 'Barangay not found';
-  const city = components.city || components.town || components.village || 'City not found';
-  const state = components.state || 'State not found';
-  const country = components.country || 'Country not found';
+  const barangay = components.suburb || components.village || components.neighbourhood || '--';
+  const city = components.city || components.town || components.village || '--';
+  const state = components.state || '--';
+  const country = components.country || '--';
 
 return barangay +", " + city +" " + state
   // return data.results[0]?.formatted || "Unknown location";
@@ -460,8 +460,8 @@ const updateUserNote = async (id, note, timeout = 5000) => {
   }));
 };
 
-const getAllMessageIds = async (userId, timeout = 5000) => {
-  const messagesRef = ref(db, `users/${userId}/messages`);
+const getMessage = async (userId,messageId, timeout = 5000) => {
+  const messagesRef = ref(db, `users/${userId}/messages/${messageId}`);
 
   // Timeout promise
   const timeoutPromise = new Promise((_, reject) =>
@@ -472,11 +472,8 @@ const getAllMessageIds = async (userId, timeout = 5000) => {
   const getPromise = get(messagesRef).then((snapshot) => {
     if (snapshot.exists()) {
       const data = snapshot.val();
-      const messages = Object.entries(data).map(([id, message]) => ({
-        id,
-        date: message.date,
-      }));
-      return { success: true, messages };
+   
+      return { success: true, data:data };
     }
     return { success: false, message: "No messages found." };
   });
@@ -492,7 +489,7 @@ const getAllMessageIds = async (userId, timeout = 5000) => {
 
 
 
-  // const getAllMessageIds = async (userId, timeout = 5000) => {
+  // const getMessage = async (userId, timeout = 5000) => {
   //   const messagesRef = ref(db, `users/${userId}/messages`);
 
   //   // Timeout promise
@@ -563,5 +560,5 @@ export {
   getCurrentLocation,
  
   updateUserNote,
-  getAllMessageIds,
+  getMessage,
 };

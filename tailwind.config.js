@@ -6,6 +6,10 @@ export default {
     ],
     theme: {
         extend: {
+            textIndent: {
+                '4': '1rem',
+            },
+
             keyframes: {
                 slideIn: {
                     '0%': { transform: 'translateY(-16)', opacity: '1' },
@@ -35,7 +39,9 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+
+    ],
 
 
 
