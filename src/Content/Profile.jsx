@@ -394,12 +394,20 @@ const MessageCard = ({messageData,close}) => {
   
     toPng(node)
       .then((dataUrl) => {
-        download(dataUrl, `vfy-message-card-${messageData.date}.png`);
+        // download(dataUrl, `VfySahare/vfy-message-card-${messageData.date}.png`);
+        triggerDownload(dataUrl)
       })
       .catch((error) => {
         console.error('oops, something went wrong!', error);
       });
   };
+  const triggerDownload = (dataUrl) => {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `vfy-message-card-${messageData.date}.png`; // You can set a custom filename
+    link.click(); // Trigger the download
+  };
+  
 
   return (
 
@@ -442,7 +450,7 @@ onClick={handleDownload}
 
     <div className=" flex justify-center mt-9">
           <button
-            className="cursor-pointer text-white font-normal relative rounded-full px-3 border border-white"
+            className="cursor-pointer text-white font-normal relative rounded-full px-4 py-3 border border-white"
           onClick={close}
           >
             X
