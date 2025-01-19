@@ -139,7 +139,21 @@ function Profile() {
 const ProfileCard = ({ Info, reload, action }) => {
   const [usernameValue, setUsername] = useState("...");
   const [userNoteValue, setNote] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltipMsg, setShowTooltipMsg] = useState('');
 
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/?section=vfymessage&shareid=${Info.data.userId}`)
+      .then(() => {
+       setShowTooltip(true);
+        setTimeout(() => setShowTooltip(false), 4000);
+        setShowTooltipMsg('Link Copied!')
+      })
+      .catch((error) => {
+        console.error('Failed to copy the link:', error);
+      });
+  };
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
     setNote(value);
@@ -153,6 +167,9 @@ const ProfileCard = ({ Info, reload, action }) => {
     if (!res.err) {
       if (res.success) {
         action({ event: "stop", message: "", reload: false });
+        setShowTooltip(true);
+        setTimeout(() => setShowTooltip(false), 4000);
+        setShowTooltipMsg('Profile Note Updated!')
       } else {
         action({ event: "error", message: res.message, reload: false });
       }
@@ -190,6 +207,7 @@ const ProfileCard = ({ Info, reload, action }) => {
 
   return (
     <div className="w-full h-fit flex flex-col justify-center gap-2  bg-white dark:bg-gray-800 rounded-lg shadow p-2">
+      
       <div className="flex gap-0">
         <div>
           <img
@@ -198,14 +216,18 @@ const ProfileCard = ({ Info, reload, action }) => {
             className="bg-purple-200 w-24 h-24 shrink-0 rounded-xl"
           />
           <div className="mt-3">
-            <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-nowrap  px-4">
-              Share
+            <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-wrap  px-4 text-base font-thin"
+            onClick={handleCopyLink}
+            >
+             Share
             </button>
+            
           </div>
         </div>
 
         <div className="flex flex-col text-white w-full">
           <span className="font-bold italic ml-2">{usernameValue}</span>
+          
           <textarea
             className="bg-slate-700 text-slate-300 h-16 placeholder:text-slate-300 placeholder:opacity-50 border border-slate-600 col-span-1 resize-none outline-none rounded-lg p-1 duration-300 focus:border-slate-300 text-sm text-wrap mt-2 mb-2 ml-2"
             placeholder="Add note... "
@@ -214,13 +236,23 @@ const ProfileCard = ({ Info, reload, action }) => {
             onChange={handleChange}
             maxLength={155}
           ></textarea>
-          <div className=" text-right">
-            <button
+          <div className=" flex justify-between items-center text-right">
+            <div className="flex justify-center  flex-1 px-5">
+              
+              <div className={ showTooltip ? "bg-green-400 w-max text-black px-14 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipF" : "bg-green-400 w-max text-black px-14 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipB"}>
+                <p className="text-sm">{showTooltipMsg}</p>
+              </div>
+            
+            </div>
+          <div>
+          <button
               className="-mt-20 hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-sm p-1"
               onClick={updateNote}
             >
               Save note
             </button>
+          </div>
+        
           </div>
         </div>
       </div>
@@ -256,19 +288,7 @@ const Messages = ({ Info, reload, action }) => {
           {/* ICON HERE */}
 
           <div className=" flex items-center gap-1 text-sm md:flex">
-            <svg
-              className="w-4 h-4 text-red-500 transition-all duration-300 "
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clipRule="evenodd"
-                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                fillRule="evenodd"
-              ></path>
-            </svg>
+            ❤️
             <span className="inl tabular-nums tracking-wider font-display font-normal text-white bg-red-600 rounded-md p-1">
               {messages.length}
             </span>
@@ -283,8 +303,7 @@ const Messages = ({ Info, reload, action }) => {
             {messages.map((message) => (
               <MessagesList
                 key={message.id}
-                messageId={message.id}
-                messageDate={message.date}
+                messageData={message}
                 showmessage={action}
               />
             ))}
@@ -295,8 +314,8 @@ const Messages = ({ Info, reload, action }) => {
   );
 };
 
-const MessagesList = ({ messageId, messageDate = "", showmessage }) => {
-  let date = messageDate.slice(0, 10);
+const MessagesList = ({ messageData, showmessage }) => {
+  let date = messageData.date ? messageData.date.slice(0, 10) : false;
 
   const isDateMatch = date == getCurrentDateTime("date");
   // console.log(isDateMatch)
@@ -306,7 +325,7 @@ const MessagesList = ({ messageId, messageDate = "", showmessage }) => {
   };
 
   const message = () => {
-    showmessage(messageId);
+    showmessage(messageData.id);
   };
   return (
     <>
@@ -323,25 +342,13 @@ const MessagesList = ({ messageId, messageDate = "", showmessage }) => {
                 <div className="relative">
                   <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-30 blur-sm transition-opacity duration-300 group-hover:opacity-40"></div>
                   <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900">
-                    <svg
-                      className="h-6 w-6 text-emerald-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                💌
                   </div>
                 </div>
 
                 <div>
                   <h3 className="font-semibold text-white text-sm user-select: none pointer-events-none">
-                    anonymous vow
+                 <span className="font-light text-sm ml-1 mr-1">from :  </span>   {messageData.nickname} <span className="font-light">Vow</span> 💝
                   </h3>
                   <p className="text-sm text-slate-400"></p>
                 </div>
@@ -349,7 +356,9 @@ const MessagesList = ({ messageId, messageDate = "", showmessage }) => {
 
               <div className="flex flex-col items-end gap-1">
                 <span className="text-[0.4em] text-slate-400 -mt-2">
-                  {messageDate}
+                  {messageData.date && (
+                    messageData.date
+                  )}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500">
                   <span className="h-1 w-1 rounded-full bg-emerald-500"></span>
@@ -414,6 +423,9 @@ const MessageCard = ({messageData,close}) => {
 
     <div className="relative w-full ">
        <div id="message-card" className="w-full bg-gradient-to-r from-pink-500 from-10% via-sky-700 via-30% to-pink-500 to-90% bg-[length:400%] rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3  hover:shadow-2xl hover:shadow-pink-300 transition-shadow opacity-0 animate-appearEnvelope">
+
+        <h2 className="text-black">Vow For You💖</h2>
+
        <div className=" flex flex-col justify-center items-center w-full min-h-48 h-auto bg-zinc-300 rounded-2xl text-black p-4 relative">
         <div className="text-left items-start  w-full">
           <p className="text-base">Dear {getSession().data.username},</p>
@@ -430,17 +442,17 @@ const MessageCard = ({messageData,close}) => {
 
 
       <div className="text-white bg-neutral-800 w-full p-4 rounded-lg">
-        <p className="text-sm -mb-1">By:</p>
+        <p className="text-sm font-light -mb-1">from:</p>
         <p className="font-extrabold text-base ml-3">{messageData.nickname}</p>
-        <p className="text-sm -mb-1 mt-2">Estimated Address:</p>
-        <p className="font-extrabold text-base ml-3">{messageData.location}</p>
+        <p className="text-sm font-light -mb-1 mt-2">Approximate address:</p>
+        <p className="font-extrabold text-base font-thin ml-3">{messageData.location}</p>
       </div>
      
     </div>
 
 
 {/* share button */}
-<button className="bg-sky-700  text-sm font-light px-2 rounded-xl hover:bg-sky-500 transition-colors mt-3"
+<button className="bg-sky-700  text-sm font-light px-2 py-1 rounded-xl hover:bg-sky-500 transition-colors mt-3 opacity-0 animate-appearEnvelope"
 onClick={handleDownload}
 >
        Download and share
@@ -448,9 +460,9 @@ onClick={handleDownload}
 
     {/* Close Modal button */}
 
-    <div className=" flex justify-center mt-9">
+    <div className=" flex justify-center mt-9 ">
           <button
-            className="cursor-pointer text-white font-normal relative rounded-full px-4 py-3 border border-white"
+            className="cursor-pointer text-white font-normal relative rounded-full px-4 py-3 border border-white opacity-0 animate-appear"
           onClick={close}
           >
             X
@@ -472,8 +484,7 @@ ProfileCard.propTypes = {
 };
 
 MessagesList.propTypes = {
-  messageId: PropTypes.string.isRequired,
-  messageDate: PropTypes.string.isRequired.toString,
+  messageData: PropTypes.object.isRequired,
   showmessage: PropTypes.func,
 };
 

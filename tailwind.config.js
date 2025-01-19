@@ -30,13 +30,20 @@ export default {
                     '0%': { clipPath: 'polygon(50% 0%, 100% 0, 0 0)' },
                     '100%': { clipPath: 'polygon(50% 49%, 100% 0, 0 0)' },
                 },
+                appearToolTip: {
+                    '0%': { opacity: '0', transform: 'scale(0)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
+                },
             },
             animation: {
                 slideIn: 'slideIn 0.5s forwards 1.5s',
                 appear: 'appear 0.5s forwards 1.7s',
                 appearEnvelope: 'appearEnvelope 0.3s forwards 0.3s',
                 clipExpand: 'clipExpand 0.8s forwards 1.6s',
+                appearToolTipF: 'appearToolTip 0.3s forwards .2s',
+                appearToolTipB: 'appearToolTip 0.9s backward .6s',
             },
+
         },
     },
     plugins: [
