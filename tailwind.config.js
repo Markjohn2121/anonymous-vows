@@ -35,7 +35,7 @@ export default {
                 slideIn: 'slideIn 0.5s forwards 1.5s',
                 appear: 'appear 0.5s forwards 1.7s',
                 appearEnvelope: 'appearEnvelope 0.3s forwards 0.3s',
-                clipExpand: 'clipExpand 0.5s forwards 1.6s',
+                clipExpand: 'clipExpand 0.8s forwards 1.6s',
             },
         },
     },
