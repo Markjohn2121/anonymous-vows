@@ -1,5 +1,6 @@
 import { act, useEffect, useState } from "react";
 import {
+  checkDateFromInternet,
   checkSessionAndNavigate,
   clearSession,
   getCurrentDateTime,
@@ -29,10 +30,18 @@ function Profile() {
   const [isReload, setIsReload] = useState(false);
   const [showMessageCard, setMessageCard] = useState(false)
   const [MessageCardData, setMessageCardData] = useState('')
-  
+  const [isDateValid, setDateValid] = useState(false)
   const [allowReload, setAllowReload] = useState(false);
 
+  const checkDate = async () => {
+      
+    setDateValid(await checkDateFromInternet());
+  };
+
   useEffect(() => {
+
+   
+
     if (idParam === null) {
       //    clearSession()
       checkSessionAndNavigate("profile");
@@ -43,13 +52,25 @@ function Profile() {
       window.location.replace("/?section=profile&id=" + userInfo.data.userId);
     }
 
-    //
-  }, [userInfo, idParam]);
 
+
+    //
+    
+  }, [userInfo, idParam]);
+ 
   //  Action LOading and Error view
 
   const showMessage = async (message) => {
+
     show({event:'loading'})
+   await checkDate();
+     
+
+    if(!isDateValid){
+      show({event:'error' ,message:'YOU CAN OPEN THIS MESSAGE ON or AFTER FEBRUARY 14. 😊'})
+      return
+    }
+
     const res = await getMessage(userInfo.data.userId,message)
 
     if(res.success){

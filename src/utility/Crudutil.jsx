@@ -6,6 +6,53 @@ import { ref, set, get, push } from "firebase/database";
 import React, { useState, useEffect } from "react";
 import { use } from 'react';
 
+const checkDateFromInternet = async () => {
+  const apiKey = 'ZZXQ1ERRJR7N'; // Replace with your TimeZoneDB API key
+  const timezone = 'Asia/Manila';
+  const apiUrl = `https://api.timezonedb.com/v2.1/get-time-zone?key=${apiKey}&format=json&by=zone&zone=${timezone}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (response.ok) {
+      const currentDate = new Date(data.formatted);
+      return isFebruary14OrLater(currentDate);
+    } else {
+      console.error("Failed to fetch the date from the API");
+      return localDateAsFallback();
+    }
+  } catch (error) {
+    console.error("Error fetching the date:", error);
+    return localDateAsFallback();
+  }
+};
+
+// Helper function to check if the date is February 14 or later
+const isFebruary14OrLater = (date) => {
+  const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1 for 1-12
+  const day = date.getDate();
+  console.log(month > 1 || (month === 1 && day >= 20))
+  return (month >= 2 && day >= 14);
+};
+
+// Fallback function to use the local date
+const localDateAsFallback = () => {
+  console.log("Using local date as fallback");
+  const localDate = new Date();
+  return isFebruary14OrLater(localDate);
+};
+
+
+
+
+
+
+
+
+
+
+
 
 // const fetchAccurateLocation = async () => {
 //   const API_KEY = "AIzaSyCEPNninNmJrzzx-pfTs2VRnHfA6sXL5YU"; // Replace with your actual API key
@@ -561,4 +608,5 @@ export {
  
   updateUserNote,
   getMessage,
+  checkDateFromInternet,
 };
