@@ -168,7 +168,7 @@ const ProfileCard = ({ Info, reload, action }) => {
       .then(() => {
        setShowTooltip(true);
         setTimeout(() => setShowTooltip(false), 4000);
-        setShowTooltipMsg('Link Copied!')
+        setShowTooltipMsg('Profile Link Copied!')
       })
       .catch((error) => {
         console.error('Failed to copy the link:', error);
@@ -237,7 +237,7 @@ const ProfileCard = ({ Info, reload, action }) => {
             className="bg-purple-200 w-24 h-24 shrink-0 rounded-xl"
           />
           <div className="mt-3">
-            <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-wrap  px-4 text-base font-thin"
+            <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-wrap  px-4 text-base "
             onClick={handleCopyLink}
             >
              Share
@@ -258,9 +258,9 @@ const ProfileCard = ({ Info, reload, action }) => {
             maxLength={155}
           ></textarea>
           <div className=" flex justify-between items-center text-right">
-            <div className="flex justify-center  flex-1 px-5">
+            <div className="flex justify-center  flex-1 px-1">
               
-              <div className={ showTooltip ? "bg-green-400 w-max text-black px-14 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipF" : "bg-green-400 w-max text-black px-14 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipB"}>
+              <div className={ showTooltip ? "bg-green-400 w-max text-black px-2 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipF" : "bg-green-400 w-max text-black px-2 rounded-lg  flex items-center justify-center opacity-0 scale-0 animate-appearToolTipB"}>
                 <p className="text-sm">{showTooltipMsg}</p>
               </div>
             
