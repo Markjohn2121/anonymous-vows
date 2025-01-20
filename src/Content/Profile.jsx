@@ -234,7 +234,7 @@ const ProfileCard = ({ Info, reload, action }) => {
           <img
             src="/icon/icon_144.png"
             alt=""
-            className="bg-purple-200 w-24 h-24 shrink-0 rounded-xl"
+            className="w-24 h-24 shrink-0 rounded-xl"
           />
           <div className="mt-3">
             <button className="hover:bg-purple-300 bg-neutral-50 font-bold text-indigo-500 rounded text-wrap  px-4 text-base "
