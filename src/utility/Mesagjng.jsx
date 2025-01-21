@@ -48,7 +48,7 @@ const useMessages = (userId) => {
         //   },
         // });
         // navigator.serviceWorker.register('/sw.js').then((registration) => {
-        //   console.log('Service Worker registered:', registration);
+        //   //console.log('Service Worker registered:', registration);
         // }).catch((error) => {
         //   console.error('Service Worker registration failed:', error);
         // });
@@ -56,7 +56,7 @@ const useMessages = (userId) => {
 
         navigator.serviceWorker.ready.then((registration) => {
           if (registration.active) {
-            console.log('Sending push data to service worker:');
+            //console.log('Sending push data to service worker:');
             // Send the message only if the service worker is active
             registration.active.postMessage({
               type: 'PUSH_NOTIFICATION',
@@ -73,17 +73,17 @@ const useMessages = (userId) => {
         
       }
     } else {
-      console.log('Notification permission is not granted');
+      //console.log('Notification permission is not granted');
       if ('Notification' in window) {
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
-            console.log('Notification permission granted.');
+            //console.log('Notification permission granted.');
           } else {
-            console.log('Notification permission denied.');
+            //console.log('Notification permission denied.');
           }
         });
       } else {
-        console.log('Notifications are not supported in this browser.');
+        //console.log('Notifications are not supported in this browser.');
       }
       
     }

@@ -23,7 +23,7 @@ const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
-    console.log('Form Values:', formValues); // Log the form values
+    //console.log('Form Values:', formValues); // Log the form values
 
     if (formValues.password !== formValues.confirmpassword) {
         // alert("Passwords do not match");

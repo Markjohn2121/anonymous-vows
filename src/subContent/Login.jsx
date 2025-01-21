@@ -29,7 +29,7 @@ function Login() {
     openModal();
     setLoading(true);
     const res = await readUser(formValues);
-    console.log(formValues);
+    //console.log(formValues);
     if (!res.err) {
       closeModal();
     } else {

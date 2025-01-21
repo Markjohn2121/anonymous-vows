@@ -32,13 +32,13 @@ const checkDateFromInternet = async () => {
 const isFebruary14OrLater = (date) => {
   const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1 for 1-12
   const day = date.getDate();
-  console.log(month > 1 || (month === 1 && day >= 20))
+  //console.log(month > 1 || (month === 1 && day >= 20))
   return (month >= 2 && day >= 14);
 };
 
 // Fallback function to use the local date
 const localDateAsFallback = () => {
-  console.log("Using local date as fallback");
+  //console.log("Using local date as fallback");
   const localDate = new Date();
   return isFebruary14OrLater(localDate);
 };
@@ -68,9 +68,9 @@ const localDateAsFallback = () => {
 
 //     if (response.ok) {
 //       const data = await response.json();
-//       console.log("Accurate Location:", data.location);
-//       console.log("Latitude:", data.location.lat);
-//       console.log("Longitude:", data.location.lng);
+//       //console.log("Accurate Location:", data.location);
+//       //console.log("Latitude:", data.location.lat);
+//       //console.log("Longitude:", data.location.lng);
 //     } else {
 //       console.error("Error fetching location:", response.statusText);
 //     }
@@ -117,7 +117,7 @@ const getCurrentLocation = async (onSuccess, onError) => {
       async (position) => {
         const { latitude, longitude } = position.coords;
 
-        console.log(position.coords)
+        //console.log(position.coords)
         try {
           const locationName = await reverseGeocode(latitude, longitude);
           onSuccess(locationName);
@@ -199,19 +199,19 @@ const checkSessionAndNavigate = (location) => {
 
   if (location == "login") {
     if (sessionInfo.exists) {
-      console.log("Session exists. Navigating to new URL.");
+      //console.log("Session exists. Navigating to new URL.");
       window.location.replace("/?section=profile&id=" + sessionInfo.data.userId);
     } else {
-      console.log("No session found.");
+      //console.log("No session found.");
       // window.location.replace('/me/login'); // Replace '/dashboard' with your target URL
     }
   } else if (location == "profile") {
     if (sessionInfo.exists) {
-      console.log("Session exists. Navigating to new URL.");
+      //console.log("Session exists. Navigating to new URL.");
 
       window.location.replace('/me/profile?='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
     } else {
-      console.log("No session found.");
+      //console.log("No session found.");
       window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
     }
   }else{
@@ -252,7 +252,7 @@ const clearSession = () => {
 };
 
 const checkUsername = async (username, timeout = 5000) => {
-  console.log("Get all users");
+  //console.log("Get all users");
   const usersRef = ref(db, "users");
 
   // Timeout promise
@@ -266,7 +266,7 @@ const checkUsername = async (username, timeout = 5000) => {
       const data = snapshot.val();
       const userIds = Object.keys(data); // This should be an array
 
-      console.log(`Checking if username ${username} exists in user IDs`);
+      //console.log(`Checking if username ${username} exists in user IDs`);
 
       if (!Array.isArray(userIds)) {
         console.error("userIds is not an array");
@@ -276,11 +276,11 @@ const checkUsername = async (username, timeout = 5000) => {
       const isUsernameInIds = userIds.some((id) => id.startsWith(username + "-"));
       const userid = userIds.filter((id) => id.startsWith(username + "-"));
 
-      console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
+      //console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
       // return [isUsernameInIds, userid];
       return {isExist:isUsernameInIds,id:userid[0],err:false ,message: "userIds is not an array"};
     } else {
-      console.log("No data available");
+      //console.log("No data available");
       return {isExist:false,err:false ,message: "userIds is not an array"};
     }
   });
@@ -294,7 +294,7 @@ const checkUsername = async (username, timeout = 5000) => {
 
 
 const getAllUsers = async () => {
-  console.log("Get all users");
+  //console.log("Get all users");
   const usersRef = ref(db, "users");
 
   try {
@@ -302,10 +302,10 @@ const getAllUsers = async () => {
     if (snapshot.exists()) {
       const data = snapshot.val();
       const userIds = Object.keys(data); // This should be an array
-      // console.log(userIds); // Log to check if it's an array
+      // //console.log(userIds); // Log to check if it's an array
       return userIds;
     } else {
-      console.log("No data available");
+      //console.log("No data available");
       return [];
     }
   } catch (error) {
@@ -348,7 +348,7 @@ const isUserExists = (userId, timeout = 5000) => {
 
 const createUser = async (data) => {
   const result = await checkUsername(data.username);
-  console.log(result);
+  //console.log(result);
   if (!result[0]) {
     // Generate a unique ID for the user based on the current date and time
     const userId =
@@ -402,7 +402,7 @@ const createMessage = (userId, data, timeout = 5000) => {
 
 
 const readUser = async (data, timeout = 5000) => {
-  console.log("Read user");
+  //console.log("Read user");
 
   const result = await checkUsername(data.username);
 
@@ -448,7 +448,7 @@ const readUser = async (data, timeout = 5000) => {
     if(result.err){
       return { isExist: false, err: true, message: "Something went wrong" };
     }
-    console.log("User does not exist");
+    //console.log("User does not exist");
     return { isExist: false, err: false, message: "Username or password is incorrect" };
   }
 };
@@ -568,23 +568,23 @@ const getMessage = async (userId,messageId, timeout = 5000) => {
 
 
 const readMessage = () => {
-  console.log("Read message");
+  //console.log("Read message");
 };
 
 const updateUser = () => {
-  console.log("Update user");
+  //console.log("Update user");
 };
 
 const updateMessage = () => {
-  console.log("Update message");
+  //console.log("Update message");
 };
 
 const deleteUser = () => {
-  console.log("Delete user");
+  //console.log("Delete user");
 };
 
 const deleteMessage = () => {
-  console.log("Delete message");
+  //console.log("Delete message");
 };
 
 export {

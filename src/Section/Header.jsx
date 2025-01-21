@@ -43,7 +43,7 @@ function Header() {
           
           <div
             className={
-              param == 'home' || param == 'signup'
+              param == 'home'
                 ? "hidden"
                 : " -mt-5 flex flex-row items-center justify-end pr-3 mb-5"
             }
@@ -65,7 +65,7 @@ function Header() {
                     Logout
                   </button>
                 
-              ): (
+              ):  (
                 <Link to="/?section=profile">
                   <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
                     My Profile
@@ -75,10 +75,26 @@ function Header() {
               }
                 
               </>
-            ) : (
+            ) : param == 'login' ? (
+
+            
+              <Link to="/?section=signup">
+                <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
+                  Sign Up
+                </p>
+              </Link>
+            ): param == 'signup' ? (
+              
+              <Link to="/?section=login">
+                <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
+                  Login
+                </p>
+              </Link>
+            ):(
+              
               <Link to="/?section=home">
                 <p className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black">
-                  JOIN NOW {}
+                  Sign Up
                 </p>
               </Link>
             )}

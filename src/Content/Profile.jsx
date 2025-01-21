@@ -47,7 +47,7 @@ function Profile() {
       checkSessionAndNavigate("profile");
     }
 
-    // console.log(userInfo);
+    // //console.log(userInfo);
     if (idParam == null || idParam != userInfo.data.userId) {
       window.location.replace("/?section=profile&id=" + userInfo.data.userId);
     }
@@ -76,7 +76,7 @@ function Profile() {
     if(res.success){
       setMessageCardData(res.data)
       show({event:'card'})
-      console.log(res)
+      //console.log(res)
      
     }else{
       show({event:'error' ,message:'error fetching message'})
@@ -200,7 +200,7 @@ const ProfileCard = ({ Info, reload, action }) => {
   };
 
   useEffect(() => {
-    console.log(Info);
+    // //console.log(Info);
     action({ event: "loading", message: "", reload: false });
 
     const fetchUserData = async () => {
@@ -286,7 +286,7 @@ const Messages = ({ Info, reload, action }) => {
   // const [error, setError] = useState(null);
 
   const { messages, error } = useMessages(Info.data.userId);
-  // console.log()
+  // //console.log()
 
   // setMessageCount(messages.length)
   useEffect(() => {
@@ -339,7 +339,7 @@ const MessagesList = ({ messageData, showmessage }) => {
   let date = messageData.date ? messageData.date.slice(0, 10) : false;
 
   const isDateMatch = date == getCurrentDateTime("date");
-  // console.log(isDateMatch)
+  // //console.log(isDateMatch)
 
   const showMsg = () => {
     alert(date == getCurrentDateTime("date"));

@@ -1,90 +1,85 @@
 import React from 'react';
-import { FaFacebookSquare, FaInstagram, FaUserPlus, FaSignInAlt } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaFacebook, FaInstagram } from 'react-icons/fa';
 
-const Front = () => {
+const VowForYou = () => {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <header
-        className="text-center py-20 bg-cover bg-center relative shadow-lg"
-        style={{ backgroundImage: `url('/src/assets/hero_bg.png')` }}
-      >
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative z-10 text-white">
-          <h1 className="text-5xl font-extrabold leading-tight">
-            Share the Love with <span className="text-red-500">VowForYou</span>
-          </h1>
-          <p className="text-xl mt-6">
-            Send and receive sweet anonymous messages. Open them on Valentine's Day!
-          </p>
-          <div className="mt-10 space-x-6 pb-9">
-            <a
-              href="/?section=signup"
-              className="px-8 py-4 bg-red-500 hover:bg-red-600 text-lg font-semibold rounded-lg shadow-lg transition-transform transform hover:scale-105 inline-flex items-center space-x-3"
-            >
-              <FaUserPlus className="w-6 h-6" />
-              <span>Sign Up</span>
-            </a>
-            <a
-              href="/?section=login"
-              className="px-8 py-4 bg-gray-700 hover:bg-gray-800 text-lg font-semibold rounded-lg shadow-lg transition-transform transform hover:scale-105 inline-flex items-center space-x-3"
-            >
-              <FaSignInAlt className="w-6 h-6" />
-              <span>Log In</span>
-            </a>
-          </div>
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      {/* Header */}
+      <header className="bg-black text-white">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-extrabold">VowForYou</h1>
         </div>
       </header>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-pink-100">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-red-600 mb-10">How VowForYou Works</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
-            <div className="p-8 shadow-lg rounded-lg bg-pink-50 hover:bg-white transition-all duration-300">
-              <h3 className="text-2xl font-bold text-red-500 mb-4">Create Your Profile</h3>
-              <p className="text-gray-600">
-                Sign up to receive your personal profile link and start collecting messages.
-              </p>
-            </div>
-            <div className="p-8 shadow-lg rounded-lg bg-pink-50 hover:bg-white transition-all duration-300">
-              <h3 className="text-2xl font-bold text-red-500 mb-4">Share Your Link</h3>
-              <p className="text-gray-600">
-                Spread the word by sharing your unique link with friends and loved ones.
-              </p>
-            </div>
-            <div className="p-8 shadow-lg rounded-lg bg-pink-50 hover:bg-white transition-all duration-300">
-              <h3 className="text-2xl font-bold text-red-500 mb-4">Open on Valentine's Day</h3>
-              <p className="text-gray-600">
-                Unlock all the heartfelt messages you've received on February 14!
-              </p>
-            </div>
+      {/* Hero Section */}
+      <section className="relative bg-cover bg-center py-20 text-center text-white" style={{ backgroundImage: "url('/src/assets/hero_bg.png')" }}>
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+            Share the Love with <span className="text-orange-500">VowForYou</span>
+          </h2>
+          <p className="mt-4 text-lg md:text-xl">Send and receive sweet anonymous messages. Open them on Valentine's Day!</p>
+          <button className="mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg text-lg"
+          onClick={ () => window.location.replace("/?section=login")}
+          >
+            
+            Start Now
+          </button>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 className="text-3xl font-extrabold mb-4 text-gray-800">How VowForYou Works</h3>
+            <ul className="space-y-4 text-gray-700 text-lg">
+              <li><strong>Create Your Profile:</strong> Sign up to receive your personal profile link.</li>
+              <li><strong>Share Your Link:</strong> Send the link to your friends and loved ones.</li>
+              <li><strong>Open on Valentine's Day:</strong> All messages are unlocked on February 14!</li>
+            </ul>
+          </div>
+          <div>
+            <img src="/src/assets/hero_bg.png" alt="How VowForYou works" className="rounded-lg shadow-lg" />
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <footer className="bg-red-100 py-10">
-        <div className="container mx-auto text-center pb-8">
-          <h2 className="text-2xl font-bold text-red-600 mb-6">Connect with Us</h2>
-          <div className="flex justify-center space-x-6">
-            <a
-              href="#"
-              className="text-red-500 hover:text-red-600 text-4xl transition-transform transform hover:scale-110"
-            >
-              <FaFacebookSquare />
-            </a>
-            <a
-              href="#"
-              className="text-red-500 hover:text-red-600 text-4xl transition-transform transform hover:scale-110"
-            >
-              <FaInstagram />
-            </a>
+      <section className="bg-black text-white py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <h3 className="text-3xl font-extrabold mb-6 text-center text-orange-500">Contacts</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="flex flex-col items-center space-y-3">
+              
+              <a href="mailto:valdezmarkjohn21@gmail.com" className="hover:text-orange-500 text-lg"><FaEnvelope className="text-orange-500 text-3xl" /></a>
+            </div>
+            <div className="flex flex-col items-center space-y-3">
+              
+              <a href="tel:09266215236" className="hover:text-orange-500 text-lg"><FaPhone className="text-orange-500 text-3xl" /></a>
+            </div>
+            <div className="flex flex-col items-center space-y-3">
+              
+              <a href="https://www.facebook.com/share/1AvFtmMzYT/" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 text-lg"><FaFacebook className="text-orange-500 text-3xl" /></a>
+            </div>
+            <div className="flex flex-col items-center space-y-3">
+             
+              <a href="https://www.instagram.com/_easytechsolutions/profilecard/?igsh=YmNvam9rdnZpNWdp" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 text-lg"> <FaInstagram className="text-orange-500 text-3xl" /></a>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-gray-400 py-10">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h4 className="text-white font-bold mb-4 text-lg">VowForYou</h4>
+          <p>Share your profile link to receive sweet anonymous messages, openable only on February 14.</p>
+          <p className="mt-4">&copy; {new Date().getFullYear()} VowForYou. All rights reserved.</p>
         </div>
       </footer>
     </div>
   );
 };
 
-export default Front;
+export default VowForYou;

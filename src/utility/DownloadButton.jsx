@@ -31,9 +31,9 @@ function DownloadButton() {
       deferredPrompt.prompt(); // Show the install prompt
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
+          //console.log("User accepted the install prompt");
         } else {
-          console.log("User dismissed the install prompt");
+          //console.log("User dismissed the install prompt");
         }
         setDeferredPrompt(null); // Clear the deferred prompt
         setShowInstallButton(false); // Hide the install button
@@ -52,18 +52,6 @@ function DownloadButton() {
     <>
       {showInstallButton ? (
         <button onClick={handleInstallClick}>Install App</button>
-      ) : !isRunningAsPWA() ? (
-        sectionParam == "vfymessage" ? (
-          <div>
-            
-            <Link to={`web+vfymessage://${shareIdParam}`}>open in app</Link>{" "}
-          </div>
-        ) : (
-          <div>
-            
-            <Link to={`web+vfy${sectionParam}://${idParam}`}>open in app</Link>{" "}
-          </div>
-        )
       ) : null}
     </>
   );

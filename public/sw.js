@@ -1,10 +1,10 @@
 self.addEventListener('install', (event) => {
 
-    console.log('Service Worker installed:', event);
+    //console.log('Service Worker installed:', event);
 });
 
 self.addEventListener('activate', (event) => {
-    console.log('Service Worker activated:', event);
+    //console.log('Service Worker activated:', event);
 });
 
 
@@ -20,10 +20,10 @@ self.addEventListener('fetch', (event) => {
 
 
 self.addEventListener('push', (event) => {
-    console.log('Push event received:', event);
+    //console.log('Push event received:', event);
 
     const data = event.data ? event.data.json() : {};
-    console.log('Parsed push data:', data);
+    //console.log('Parsed push data:', data);
 
     const title = data.title || 'Default title';
     const options = {
@@ -39,10 +39,10 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('message', (event) => {
 
-    console.log('Received push data from app:', event);
+    //console.log('Received push data from app:', event);
     if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
         const message = event.data.payload;
-        console.log('Received push data from app:', message);
+        //console.log('Received push data from app:', message);
 
         // Show notification from service worker
         self.registration.showNotification('neww', {
