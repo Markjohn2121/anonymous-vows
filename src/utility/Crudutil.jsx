@@ -252,45 +252,53 @@ const clearSession = () => {
 };
 
 const checkUsername = async (username, timeout = 5000) => {
-  //console.log("Get all users");
-  const usersRef = ref(db, "users");
-
   // Timeout promise
+  let isTimedOut = false;
   const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Request timed out")), timeout)
+    setTimeout(() => {
+      isTimedOut = true;
+      reject(new Error("Request timed out"));
+    }, timeout)
   );
 
+  const usersRef = ref(db, "users");
+
   // Firebase get request promise
-  const getPromise = get(usersRef).then((snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      const userIds = Object.keys(data); // This should be an array
+  const getPromise = get(usersRef)
+    .then((snapshot) => {
+      if (isTimedOut) return; // If the timeout is triggered, abort the operation
 
-      //console.log(`Checking if username ${username} exists in user IDs`);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const userIds = Object.keys(data);
 
-      if (!Array.isArray(userIds)) {
-        console.error("userIds is not an array");
-        return {isExist:false,err:true ,message: "userIds is not an array"};
+        if (!Array.isArray(userIds)) {
+          return { isExist: false, err: true, message: "userIds is not an array" };
+        }
+
+        const isUsernameInIds = userIds.some((id) => id.startsWith(username + "-"));
+        const userid = userIds.filter((id) => id.startsWith(username + "-"));
+
+        return { isExist: isUsernameInIds, id: userid[0], err: false, message: "Success" };
+      } else {
+        return { isExist: false, err: false, message: "No data available" };
       }
+    })
+    .catch((error) => {
+      console.error(error);
+      return { isExist: false, err: true, message: error.message };
+    });
 
-      const isUsernameInIds = userIds.some((id) => id.startsWith(username + "-"));
-      const userid = userIds.filter((id) => id.startsWith(username + "-"));
-
-      //console.log(`Is username ${username} in user IDs: ${isUsernameInIds}`);
-      // return [isUsernameInIds, userid];
-      return {isExist:isUsernameInIds,id:userid[0],err:false ,message: "userIds is not an array"};
-    } else {
-      //console.log("No data available");
-      return {isExist:false,err:false ,message: "userIds is not an array"};
-    }
-  });
-
-  // Race the timeout promise against the get promise
-  return Promise.race([getPromise, timeoutPromise]).catch((error) => {
+  // Race the timeout and getPromise
+  try {
+    return await Promise.race([getPromise, timeoutPromise]);
+  } catch (error) {
     console.error(error);
-    return {isExist:false,err:true ,message: error.message};
-  });
+    return { isExist: false, err: true, message: "Request timed out" };
+  }
 };
+
+
 
 
 const getAllUsers = async () => {
@@ -346,28 +354,51 @@ const isUserExists = (userId, timeout = 5000) => {
 };
 
 
-const createUser = async (data) => {
+const createUser = async (data, timeout = 5000) => {
+  let isTimedOut = false;
   const result = await checkUsername(data.username);
-  //console.log(result);
-  if (!result[0]) {
-    // Generate a unique ID for the user based on the current date and time
-    const userId =
-      data.username + "-" + new Date().toISOString().replace(/[:.-]/g, "");
 
-    // Optionally, you can also add user info if it's a new user
-    set(ref(db, `users/${userId}/info`), {
-      name: "anonymous",
-      username: data.username,
-      password: data.password,
-      note:'',
-    });
 
-    setSession({ userId: userId, username: data.username });
-    return [true, userId];
-  } else {
-    return [false, "User already exists"];
-  }
+if(result.err) return { success: false, err: true };
+if(result.isExist) return { success: false, err: false, message: 'Username already used!' };
+
+
+  // Create a promise for the timeout
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => {
+      isTimedOut = true;
+      reject(new Error("Request timed out"));
+    }, timeout)
+  );
+
+  // Main create user logic
+  const userId = data.username + "-" + new Date().toISOString().replace(/[:.-]/g, "");
+  const createUserPromise = set(ref(db, `users/${userId}/info`), {
+              name: "anonymous",
+              username: data.username,
+              password: data.password,
+              note: '',
+            }).then(() =>{
+              if(!isTimedOut){
+                setSession({ userId: userId, username: data.username });
+                return { success: true, err: false, id: userId };
+              }
+            });
+
+            
+  // Race the promises
+  return Promise.race([createUserPromise, timeoutPromise])
+    .then((result) => result)
+    .catch((error) => ({ success: false, err: true, message: error.message }));
 };
+
+
+
+
+
+
+
+
 const createMessage = (userId, data, timeout = 5000) => {
   const messagesRef = ref(db, `users/${userId}/messages`);
   let isTimedOut = false;

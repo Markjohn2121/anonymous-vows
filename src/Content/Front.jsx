@@ -12,7 +12,7 @@ const VowForYou = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-cover bg-center py-20 text-center text-white" style={{ backgroundImage: "url('/src/assets/hero_bg.png')" }}>
+      <section className="relative bg-cover bg-center py-20 text-center text-white" style={{ backgroundImage: "url('/hero_bg.png')" }}>
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
@@ -40,7 +40,7 @@ const VowForYou = () => {
             </ul>
           </div>
           <div>
-            <img src="/src/assets/hero_bg.png" alt="How VowForYou works" className="rounded-lg shadow-lg" />
+            <img src="  /hero_bg.png" alt="How VowForYou works" className="rounded-lg shadow-lg" />
           </div>
         </div>
       </section>

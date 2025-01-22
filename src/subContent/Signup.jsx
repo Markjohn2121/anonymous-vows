@@ -2,16 +2,29 @@ import { useState } from "react";
 import { createUser } from "../utility/Crudutil";
 
 import { useNavigate } from "react-router-dom";
+import Modal from "../utility/Modal";
+import Loader from "../assets/Loader";
+import ErrorView from "../assets/ErrorView";
 
 function Signup() {
   // State to store form values
-const [errorValue, setErrorValue] = useState([true,'']);
+const [errorValue, setErrorValue] = useState({success:true,message:""});
 const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
     confirmpassword: "",
   });
+
+  const [isLoading,setIsLoading] = useState(false)
+  const [isError,setIsError] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError(false)
+    setIsLoading(false)
+  };
 
   // Handle input changes
   const handleChange = (event) => {
@@ -22,22 +35,39 @@ const navigate = useNavigate();
 
   // Handle form submission
   const handleSubmit = async (event) => {
+    setIsModalOpen(true);
+    setIsLoading(true)
     event.preventDefault(); // Prevent default form submission
     //console.log('Form Values:', formValues); // Log the form values
 
     if (formValues.password !== formValues.confirmpassword) {
         // alert("Passwords do not match");
-        setErrorValue([false,"Passwords do not match"]);
+        setErrorValue({success:false,message:"Passwords do not match"});
         
-        
+        setIsModalOpen(false);
+        setIsLoading(false)
         return;
         }
 
    const result = await createUser(formValues); // Create a new user
+
    setErrorValue(result);
 
-   if(result[0]){
-    navigate("/?section=profile&id="+result[1]);
+   if(!result.err){
+
+      if(result.success){
+        setIsModalOpen(false);
+        setIsLoading(false)
+        navigate("/?section=profile&id="+result.id);
+      }else{
+
+ setIsModalOpen(false);
+        setIsLoading(false)
+      }
+   
+   }else{
+  
+    setIsError(true)
    }
 
  
@@ -45,6 +75,13 @@ const navigate = useNavigate();
 
   return (
     <div className="h-full flex items-center justify-center   w-full ">
+         <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {isLoading ? (
+          <Loader />
+        ) : isError ? (
+          <ErrorView err="something went wrong" closeModal={closeModal} />
+        ) : null}
+      </Modal>
       <div className="relative ">
         <div className="absolute -top-2 -left-2 -right-2 -bottom-2 rounded-lg bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg animate-pulse"></div>
 
@@ -64,7 +101,7 @@ const navigate = useNavigate();
 
           <form className="space-y-6 " onSubmit={handleSubmit}>
 <div>
-    {!errorValue[0] && <p className={!errorValue[0]?' text-white text-sm w-full text-center bg-red-800 p-1' : ''} > {errorValue[1]}</p>}
+    {!errorValue.success && <p className={!errorValue.success?' text-white text-sm w-full text-center bg-red-800 p-1' : ''} > {errorValue.message}</p>}
 
 </div>
 
@@ -75,7 +112,7 @@ const navigate = useNavigate();
               type="text"
               name="username"
               value={formValues.username}
-              onChange={(e)=> { handleChange(e) ; setErrorValue([true,''])}} 
+              onChange={(e)=> { handleChange(e) ; setErrorValue({success:true,message:""})}} 
              
               required
             />
@@ -85,8 +122,9 @@ const navigate = useNavigate();
               type="password"
               name="password"
               value={formValues.password}
-              onChange={(e)=> { handleChange(e) ; setErrorValue([true,''])}} 
+              onChange={(e)=> { handleChange(e) ; setErrorValue({success:true,message:""})}} 
               required
+              min={8}
             />
 
             <input
@@ -95,7 +133,7 @@ const navigate = useNavigate();
               type="text"
               name="confirmpassword"
               value={formValues.confirmpassword}
-              onChange={(e)=> { handleChange(e) ; setErrorValue([true,''])}} 
+              onChange={(e)=> { handleChange(e) ; setErrorValue({success:true,message:""})}} 
               required
             />
 
