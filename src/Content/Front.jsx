@@ -45,8 +45,10 @@ const VowForYou = () => {
       <section className="bg-black text-white py-20">
         <div className="max-w-7xl mx-auto px-4">
           <h3 className="text-3xl font-extrabold mb-6 text-center text-orange-500">Contacts</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center space-y-3">
+          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-4 gap-4 text-center">
+
+
+            <div className="flex flex-col items-center space-y-1">
               
               <a href="mailto:valdezmarkjohn21@gmail.com" className="hover:text-orange-500 text-lg"><FaEnvelope className="text-orange-500 text-3xl" /></a>
             </div>
