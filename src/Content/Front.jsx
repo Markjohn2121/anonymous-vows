@@ -5,18 +5,14 @@ const VowForYou = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}
-      <header className="bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-extrabold">VowForYou</h1>
-        </div>
-      </header>
+    
 
       {/* Hero Section */}
       <section className="relative bg-cover bg-center py-20 text-center text-white" style={{ backgroundImage: "url('/hero_bg.png')" }}>
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div className="relative max-w-3xl mx-auto">
+        <div className="relative max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
-            Share the Love with <span className="text-orange-500">VowForYou</span>
+            Share the Love with <span className="text-orange-500 bg-white px-3 rounded-xl">VowForYou</span>
           </h2>
           <p className="mt-4 text-lg md:text-xl">Send and receive sweet anonymous messages. Open them on Valentine's Day!</p>
           <button className="mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg text-lg"
@@ -40,7 +36,7 @@ const VowForYou = () => {
             </ul>
           </div>
           <div>
-            <img src="  /hero_bg.png" alt="How VowForYou works" className="rounded-lg shadow-lg" />
+            <img src="  /hero_bg.png" alt="How VowForYou works" className="rounded-lg shadow-lg w-80" />
           </div>
         </div>
       </section>
