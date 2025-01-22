@@ -59,7 +59,7 @@ function Header() {
                 
                   <button className=" py-1 px-4 bg-blue-50 rounded-md ml-16 text-black"
                   onClick={()=>{
-                   if(clearSession()) window.location.replace("/?section=login");
+                   if(clearSession()) window.location.replace("/?section=home");
                   }}
                   >
                     Logout

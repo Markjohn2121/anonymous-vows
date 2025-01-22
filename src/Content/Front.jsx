@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaEnvelope, FaPhone, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { checkSessionAndNavigate } from '../utility/Crudutil';
 
 const VowForYou = () => {
+
+useEffect(()=>{
+
+  checkSessionAndNavigate('home')
+
+},[])
+
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}

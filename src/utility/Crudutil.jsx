@@ -33,7 +33,7 @@ const isFebruary14OrLater = (date) => {
   const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1 for 1-12
   const day = date.getDate();
   //console.log(month > 1 || (month === 1 && day >= 20))
-  return (month >= 2 && day >= 14);
+  return (month >= 1 && day >= 14);
 };
 
 // Fallback function to use the local date
@@ -213,6 +213,15 @@ const checkSessionAndNavigate = (location) => {
     } else {
       //console.log("No session found.");
       window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
+    }
+  }else if (location == "home") {
+    if (sessionInfo.exists) {
+      //console.log("Session exists. Navigating to new URL.");
+
+      window.location.replace('/?section=profile&id='+sessionInfo.data.userId); // Replace '/dashboard' with your target URL
+    } else {
+      //console.log("No session found.");
+      // /window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
     }
   }else{
     window.location.replace("/?section=login"); // Replace '/dashboard' with your target URL
