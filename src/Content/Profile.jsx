@@ -35,7 +35,7 @@ function Profile() {
 
   const checkDate = async () => {
       
-    setDateValid(await checkDateFromInternet());
+   return await checkDateFromInternet();
   };
 
   useEffect(() => {
@@ -63,10 +63,10 @@ function Profile() {
   const showMessage = async (message) => {
 
     show({event:'loading'})
-   await checkDate();
+  //  await checkDate();
      
 
-    if(!isDateValid){
+    if(! await checkDate()){
       show({event:'error' ,message:'YOU CAN OPEN THIS MESSAGE ON or AFTER FEBRUARY 14. 😊'})
       return
     }

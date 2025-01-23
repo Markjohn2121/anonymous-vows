@@ -33,7 +33,7 @@ const isFebruary14OrLater = (date) => {
   const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1 for 1-12
   const day = date.getDate();
   //console.log(month > 1 || (month === 1 && day >= 20))
-  return (month >= 2 && day >= 14);
+  return (month >= 1 && day >= 14);
 };
 
 // Fallback function to use the local date
